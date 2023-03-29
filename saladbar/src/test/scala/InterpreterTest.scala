@@ -50,19 +50,18 @@ class InterpreterTest extends AnyFunSuite {
         lexicalInterpreterTest(e, l)
     }
 
-    test("fundef") {
+    test("closure") {
         // function(x) 1
-        val e = FunDef("x", N(1))
-        val l = List(e, Closure("x", N(1), EmptyEnv))
+        val e = Closure("x", N(1), EmptyEnv)
+        val l = List(e)
         lexicalInterpreterTest(e, l)
     }
 
     test("static test") {
         // let x = 1 in let f = function(y) x in let x = 2 in f(3)
         // value should be 1
-        val e = Let("x", N(1), Let("f", FunDef("y", Ident("x")), Let("x", N(2), FunCall(Ident("f"), N(3)))))
+        val e = Let("x", N(1), Let("f", Closure("y", Ident("x"), EmptyEnv), Let("x", N(2), FunCall(Ident("f"), N(3)))))
         val l = List(e, 
-            Let("f", FunDef("y", N(1)), Let("x", N(2), FunCall(Ident("f"), N(3)))),
             Let("f", Closure("y", N(1), EmptyEnv), Let("x", N(2), FunCall(Ident("f"), N(3)))),
             Let("x", N(2), FunCall(Closure("y", N(1), EmptyEnv), N(3))),
             FunCall(Closure("y", N(1), EmptyEnv), N(3)),
@@ -74,7 +73,7 @@ class InterpreterTest extends AnyFunSuite {
     test("dynamic test") {
         // let x = 1 in let f = function(y) x in let x = 2 in f(3)
         // value should be 2
-        val e = Let("x", N(1), Let("f", FunDef("y", Ident("x")), Let("x", N(2), FunCall(Ident("f"), N(3)))))
+        val e = Let("x", N(1), Let("f", Closure("y", Ident("x"), EmptyEnv), Let("x", N(2), FunCall(Ident("f"), N(3)))))
         val l = List(e, 
             Let("f", Closure("y", Ident("x"), Extend("x", N(1), EmptyEnv)), Let("x", N(2), FunCall(Ident("f"), N(3)))),
             Let("x", N(2), FunCall(Closure("y", Ident("x"), Extend("x", N(1), EmptyEnv)), N(3))),

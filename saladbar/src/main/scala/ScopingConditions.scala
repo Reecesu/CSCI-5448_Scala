@@ -21,15 +21,10 @@ case object LexicalScope extends ScopingCondition {
   def substFunctions[A](evalConditions: EvalConditions, e: Expr, x: String, esub: Expr)(sc: Expr => A):A = {
     // TODO: rec?
       e match {
-        case FunDef(id_parameter, e_functionBody) => 
-          if (x == id_parameter) sc(e)
-          else  e_functionBody.substitute(evalConditions, x, esub){
-           e_functionBodyp => sc(FunDef(id_parameter, e_functionBodyp))
-          }
         case Closure(id_parameter, e_functionBody, env) => 
           if (x == id_parameter) sc(e)
           else e_functionBody.substitute(evalConditions, x, esub){
-            e_functionBodyp => sc(Closure(id_parameter, e_functionBody, env))
+            newFunctionBody => sc(Closure(id_parameter, newFunctionBody, env))
           }
         case _ => throw new LexicalScopingError("Failed substfunciton on input $e")
       }
@@ -39,8 +34,6 @@ case object LexicalScope extends ScopingCondition {
 case object DynamicScope extends ScopingCondition {
   def substFunctions[A](evalConditions: EvalConditions, e: Expr, x: String, esub: Expr)(sc: Expr => A):A = {
     e match {
-      case FunDef(id_parameter, e_functionBody) => 
-        sc(Closure(id_parameter, e_functionBody, Extend(x, esub, EmptyEnv)))
       case Closure(id_parameter, e_functionBody, env) => 
         sc(Closure(id_parameter, e_functionBody, Extend(x, esub, env)))
       case _ => throw new DynamicScopingError("Failed substfunciton on input $e")

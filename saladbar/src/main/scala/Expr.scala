@@ -69,18 +69,6 @@ case class Ident(id: String) extends Expr {
     }
     def isValue: Boolean = false
 }
-case class FunDef(id_parameter: String, e_functionBody: Expr) extends Expr {
-    override def toString: String = s"function ($id_parameter) $e_functionBody"
-    def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
-        sc(Closure(id_parameter, e_functionBody, EmptyEnv))
-    }
-    def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
-        evalConditions.getSc.substFunctions(evalConditions, this, x, esub){
-            ep => sc(ep)
-        }
-    }
-    def isValue: Boolean = false
-}
 case class FunCall(e1: Expr, e2: Expr) extends Expr {
     override def toString: String =  s"{$e1($e2)}"
 
@@ -129,21 +117,21 @@ case class FunCall(e1: Expr, e2: Expr) extends Expr {
     def isValue: Boolean = false
 }
 case class LetRec(id_functionName: String,
-        id_parameter: String, 
-        e_funcitonBody: Expr, 
+        closure: Closure,
         e2: Expr) extends Expr {
 
     override def isValue: Boolean = false
     override def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
-        val env: Environment = ExtendRec(id_functionName, id_parameter, e_funcitonBody, EmptyEnv)
-        val v: Value = Closure(id_parameter, e_funcitonBody, env)
+        val Closure(id_parameter, e_functionBody, _) = closure
+        val env: Environment = ExtendRec(id_functionName, id_parameter, e_functionBody, EmptyEnv)
+        val v: Value = Closure(id_parameter, e_functionBody, env)
         e2.substitute(evalConditions, id_functionName, v)(sc)
     }
     override def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
         ???
         // TODO: update to closure only on parse...
     }
-    override def toString: String = s"letrec $id_functionName = function($id_parameter) { $e_funcitonBody } in $e2"
+    override def toString: String = s"letrec $id_functionName = $closure in $e2"
 }
 
 

@@ -20,9 +20,9 @@ class Parser extends RegexParsers {
         """[a-zA-Z_][a-zA-Z0-9_]*""".r
     }   
     
-    def funDefinition: Parser[FunDef] = { 
+    def funDefinition: Parser[Closure] = { 
          ("function" ~"(") ~> identifier ~ (")" ~> exprLev1)  ^^ {
-            case id~e => FunDef(id, e)
+            case id~e => Closure(id, e, EmptyEnv)
 
         }   
     }  
@@ -39,7 +39,7 @@ class Parser extends RegexParsers {
         val recFunDefOpt = ("letrec" ~> identifier) ~ ("=" ~> funDefinition) ~ ("in" ~> exprLev1 ) ^^ {
             case s1 ~ fd ~ e2 =>
                 fd match {
-                    case FunDef(id, e1) => LetRec (s1,id, e1, e2)
+                    case Closure(_, _, _) => LetRec (s1, fd, e2)
                     case _ => throw SyntaxError(s"Unexpected case in letrec definition: $fd")
                 }
         }

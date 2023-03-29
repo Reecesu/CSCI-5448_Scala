@@ -27,10 +27,10 @@ class ParserTest extends  AnyFunSuite {
     }
 
     test("fundef"){
-        assert(FunDef("y", N(1)) == parser.parse("function(y) 1"))
+        assert(Closure("y", N(1), EmptyEnv) == parser.parse("function(y) 1"))
     }
     test("letrec"){
-        assert(LetRec("g", "z", N(1), N(2)) == parser.parse("letrec g = function(z) 1 in 2"))
+        assert(LetRec("g", Closure("z", N(1), EmptyEnv), N(2)) == parser.parse("letrec g = function(z) 1 in 2"))
     }
 
     test("integration"){
@@ -50,6 +50,6 @@ class ParserTest extends  AnyFunSuite {
         assert(FunCall(Ident("f"), N(1)) == parser.parse("f(1)"))
     }
     test("funcall"){
-        assert(Let("f", FunDef("x", N(1)), FunCall(Ident("f"), N(2))) == parser.parse("let f = function(x) 1 in f(2)"))
+        assert(Let("f", Closure("x", N(1), EmptyEnv), FunCall(Ident("f"), N(2))) == parser.parse("let f = function(x) 1 in f(2)"))
     }
 }

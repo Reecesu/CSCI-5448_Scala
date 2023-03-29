@@ -20,7 +20,7 @@ class SubstituteTest extends AnyFunSuite {
     test("dynamic subst function"){
         // CONTEXT: let x = 1 in let f = function(y) x in 2
         // let f = function(y) x in 2
-        val e = Let("f", FunDef("y", Ident("x")), N(2))
+        val e = Let("f", Closure("y", Ident("x"), EmptyEnv), N(2))
         val x = "x"
         val v = N(1)
         val r = Let("f", Closure("y", Ident("x"), Extend(x, v, EmptyEnv)), N(2))
@@ -29,7 +29,7 @@ class SubstituteTest extends AnyFunSuite {
     test("dynamic subst function complex"){
         // CONTEXT: let x = 1 in let f = function (y) x in let x = 2.0 in {f(3.0)}
         // let f = function (y) x in let x = 2.0 in {f(3.0)}
-        val e = Let("f", FunDef("y", Ident("x")), Let("x", N(2), FunCall(Ident("f"), N(3))))
+        val e = Let("f", Closure("y", Ident("x"), EmptyEnv), Let("x", N(2), FunCall(Ident("f"), N(3))))
         val x = "x"
         val v = N(1)
         val r = Let("f", Closure("y", Ident("x"), Extend(x, v, EmptyEnv)), Let("x", N(2), FunCall(Ident("f"), N(3))))
