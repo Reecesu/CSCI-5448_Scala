@@ -3,23 +3,23 @@ import org.scalatest.funsuite._
 class InterpreterTest extends AnyFunSuite {
 
     def interpreterTest(interpreter: Interpreter, e: Expr, l: List[Expr]): Unit = {
+        val lFound = interpreter.evaluate(e){r => r}
         try {
-            assert(interpreter.evaluate(e) == l)
+            assert(lFound == l)
         } catch {
             case _: Throwable => {
-                val lFound = interpreter.evaluate(e)
                 (lFound zip l ) foreach { case (ef, ei) => println(s"found: $ef\nexpected: $ei\nequivalent? ${ef == ei}\n\n")}
                 assert(lFound == l)
             }
         }
     }
-    def staticInterpreterTest(e: Expr, l: List[Expr]): Unit = {
-        val interpreter = new Interpreter(LexicalScope)
+    def lexicalInterpreterTest(e: Expr, l: List[Expr]): Unit = {
+        val interpreter = new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition))
         interpreterTest(interpreter, e, l)
     }
 
     def dynamicInterpreterTest(e: Expr, l: List[Expr]): Unit = {
-        val interpreter = new Interpreter(DynamicScope)
+        val interpreter = new Interpreter(new EvalConditions(DynamicScope, NoConversions, EagerCondition))
         interpreterTest(interpreter, e, l)
     }
 
@@ -27,13 +27,13 @@ class InterpreterTest extends AnyFunSuite {
     test("number") {
         val e = N(2)
         val l = List(e)
-        staticInterpreterTest(e, l)
+        lexicalInterpreterTest(e, l)
     }
 
     test("ident failure") {
         val e = Ident("x")
         val l = List(e, LettuceError(new InterpreterError("Unbound variable found: x")))
-        staticInterpreterTest(e, l)
+        lexicalInterpreterTest(e, l)
     }
 
     test("let") {
@@ -47,14 +47,14 @@ class InterpreterTest extends AnyFunSuite {
             // 12
             N(12),
             )
-        staticInterpreterTest(e, l)
+        lexicalInterpreterTest(e, l)
     }
 
     test("fundef") {
         // function(x) 1
         val e = FunDef("x", N(1))
         val l = List(e, Closure("x", N(1), EmptyEnv))
-        staticInterpreterTest(e, l)
+        lexicalInterpreterTest(e, l)
     }
 
     test("static test") {
@@ -68,7 +68,7 @@ class InterpreterTest extends AnyFunSuite {
             FunCall(Closure("y", N(1), EmptyEnv), N(3)),
             N(1)
         )
-        staticInterpreterTest(e, l)
+        lexicalInterpreterTest(e, l)
     }
 
     test("dynamic test") {

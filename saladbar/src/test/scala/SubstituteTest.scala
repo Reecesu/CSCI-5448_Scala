@@ -1,12 +1,12 @@
 import org.scalatest.funsuite._
 
 class SubstituteTest extends AnyFunSuite {
-    def substituteTest(interpreter: Interpreter, e: Expr, x: String, v: Value, r: Expr): Unit = {
-        assert(interpreter.substitute(e,x,v) == r)
+    def substituteTest(ec: EvalConditions, e: Expr, x: String, esub: Expr, expectedResult: Expr): Unit = {
+        assert( e.substitute(ec, x, esub){r => r} == expectedResult)
     }
-    def dynamicSubstituteTest(e: Expr, x: String, v: Value, r: Expr): Unit = {
-        val interpreter = new Interpreter(DynamicScope)
-        substituteTest(interpreter, e, x, v, r)
+    def dynamicSubstituteTest(e: Expr, x: String, esub: Expr, r: Expr): Unit = {
+        val ec = new EvalConditions(DynamicScope, NoConversions, EagerCondition)
+        substituteTest(ec, e, x, esub, r)
     }
   
     test("dynamic basic"){
