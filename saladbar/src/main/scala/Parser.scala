@@ -12,6 +12,7 @@ case class SyntaxError(s: String) extends Exception {
   *   - https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala
   */
 class Parser extends RegexParsers {
+    // TODO: Geq, IfThenElse, Minus
     def floatingPointNumber: Parser[String] = { 
         """-?(\d+(\.\d*)?|\d*\.\d+)([eE][+-]?\d+)?[fFdD]?""".r
     }   

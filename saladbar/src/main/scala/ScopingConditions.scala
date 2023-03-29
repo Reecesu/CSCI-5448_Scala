@@ -44,16 +44,23 @@ case object DynamicScope extends ScopingCondition {
 abstract class TypeCondition {
     def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A
     def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A
+    def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A
 }
 case object ImplicitConversions extends TypeCondition {
   def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A = {
     sc()
   }
   def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
+    // TODO: bop class can have an (A, A) => B method
     bop match {
       case Plus => sc(N(v1.toNum + v2.toNum)) // TODO: Strings
       case Times => sc(N(v1.toNum * v2.toNum))
+      case Minus => sc(N(v1.toNum - v2.toNum))
+      case Geq => sc(B(v1.toNum >= v2.toNum))
     }
+  }
+  def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A = {
+    sc(v1.toBool)
   }
 }
 
@@ -63,7 +70,7 @@ case class NoConversionsError(msg: String) extends Exception {
 case object NoConversions extends TypeCondition {
   def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A = {
     bop match {
-      case Plus | Times => v1 match {
+      case Plus | Times | Minus | Geq => v1 match {
         case N(_) => sc()
         case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
       }
@@ -82,8 +89,24 @@ case object NoConversions extends TypeCondition {
         // TODO: strings
         case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
       }
+      case Minus => (v1, v2) match {
+        case (N(n1), N(n2)) => sc(N(n1 - n2))
+        case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+      }
+      case Geq => (v1, v2) match {
+        case (N(n1), N(n2)) => sc(B(n1 >= n2))
+        case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+      }
     }
   }
+
+  def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A = {
+    v1 match {
+      case B(b) => sc(b)
+      case _ => fc()
+    }
+  }
+
 }
 
 sealed abstract class LazyEagerCondition {

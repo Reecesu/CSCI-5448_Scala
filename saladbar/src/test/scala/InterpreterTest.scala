@@ -17,10 +17,30 @@ class InterpreterTest extends AnyFunSuite {
         val interpreter = new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition))
         interpreterTest(interpreter, e, l)
     }
-
     def dynamicInterpreterTest(e: Expr, l: List[Expr]): Unit = {
         val interpreter = new Interpreter(new EvalConditions(DynamicScope, NoConversions, EagerCondition))
         interpreterTest(interpreter, e, l)
+    }
+
+    def interpreterValueTest(interpreter: Interpreter, e: Expr, v: Value): Unit = {
+        val lFound = interpreter.evaluate(e){ r => r }
+        val vFound = lFound.reverse.head
+        try {
+            assert(vFound == v)
+        } catch {
+            case _: Throwable => {
+                lFound foreach println
+                assert(vFound == v)
+            }
+        }
+    }
+    def lexicalInterpreterValueTest(e: Expr, v: Value): Unit = {
+        val interpreter = new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition))
+        interpreterValueTest(interpreter, e, v)
+    }
+    def dynamicInterpreterValueTest(e: Expr, v: Value): Unit = {
+        val interpreter = new Interpreter(new EvalConditions(DynamicScope, NoConversions, EagerCondition))
+        interpreterValueTest(interpreter, e, v)
     }
 
 
@@ -94,4 +114,48 @@ class InterpreterTest extends AnyFunSuite {
     //         Closure("x", N(1), EmptyEnv))
     //     staticInterpreterTest(e, l)
     // }
+
+    test("rec lexical"){
+        // letrec f = function(x) if (1 >= x) 1 else x * f(x - 1) in f(2)
+        val ebody = IfThenElse(Binary(Geq, N(1), Ident("x")), 
+                N(1), 
+                Binary(Times, Ident("x"), FunCall(Ident("f"), Binary(Minus, Ident("x"), N(1)))))
+        val closure = Closure("x", ebody, EmptyEnv)
+        val e = LetRec("f", closure, FunCall(Ident("f"), N(2)))
+        val fFirstSub = Closure("x", ebody, ExtendRec("f", "x", ebody, EmptyEnv))
+        val l = List(e, 
+            // closure(x, ..., ExtendRec(f, closure, {})(2)
+            FunCall(fFirstSub, N(2)),
+            IfThenElse(Binary(Geq, N(1), N(2)), 
+                N(1), 
+                Binary(Times, N(2), FunCall(fFirstSub, Binary(Minus, N(2), N(1))))),
+            IfThenElse(B(false), 
+                N(1), 
+                Binary(Times, N(2), FunCall(fFirstSub, Binary(Minus, N(2), N(1))))),
+            Binary(Times, N(2), FunCall(fFirstSub, Binary(Minus, N(2), N(1)))),
+            Binary(Times, N(2), FunCall(fFirstSub, N(1))),
+            Binary(Times, N(2), IfThenElse(Binary(Geq, N(1), N(1)), 
+                N(1), 
+                Binary(Times, N(1), FunCall(fFirstSub, Binary(Minus, N(1), N(1)))))),
+            Binary(Times, N(2), IfThenElse(B(true), 
+                N(1), 
+                Binary(Times, N(1), FunCall(fFirstSub, Binary(Minus, N(1), N(1)))))),
+            Binary(Times, N(2), N(1)),
+            N(2)
+        )
+        lexicalInterpreterTest(e, l)
+    }
+
+    test("rec more"){
+        // letrec f = function(x) if (1 >= x) 1 else x * f(x - 1) in f(2)
+        val ebody = IfThenElse(Binary(Geq, N(1), Ident("x")), 
+                N(1), 
+                Binary(Times, Ident("x"), FunCall(Ident("f"), Binary(Minus, Ident("x"), N(1)))))
+        val closure = Closure("x", ebody, EmptyEnv)
+        val eMaker: Double => Expr = (d) => LetRec("f", closure, FunCall(Ident("f"), N(d)))
+        lexicalInterpreterValueTest(eMaker(-1), N(1))
+        lexicalInterpreterValueTest(eMaker(3), N(6))
+        dynamicInterpreterValueTest(eMaker(-1), N(1))
+        dynamicInterpreterValueTest(eMaker(3), N(6))
+    }
 }
