@@ -1,6 +1,5 @@
 import scala.util.parsing.combinator.RegexParsers
 
-
 case class SyntaxError(s: String) extends Exception {
     override def toString: String = { 
         s"Syntax Error: $s"
@@ -10,6 +9,8 @@ case class SyntaxError(s: String) extends Exception {
 /**
   * ADDAPTED FROM: https://github.com/sriram0339/LettucePlaygroundScala
   *   - https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala
+  * and: https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
+  * 
   */
 class Parser extends RegexParsers {
     // TODO: Geq, IfThenElse, Minus
@@ -19,8 +20,12 @@ class Parser extends RegexParsers {
 
     def identifier: Parser[String] = { 
         """[a-zA-Z_][a-zA-Z0-9_]*""".r
-    }   
-    
+    }  
+
+    def strLit: Parser[String] = { 
+        """[^']*""".r
+    }
+
     def funDefinition: Parser[Closure] = { 
          ("function" ~"(") ~> identifier ~ (")" ~> exprLev1)  ^^ {
             case id~e => Closure(id, e, EmptyEnv)
@@ -33,6 +38,10 @@ class Parser extends RegexParsers {
     }
 
     def exprLev1: Parser[Expr] = {
+        val ifthenelseOpt = ("if" ~ "(" ~> exprLev1) ~ (")" ~> exprLev1) ~ ("else" ~> exprLev1)  ^^ {
+            case e1 ~ e2 ~ e3 => IfThenElse(e1, e2, e3)
+        }
+        
         val letOpt = ("let" ~> identifier) ~ ("=" ~> exprLev1) ~ ("in" ~> exprLev1)  ^^ {
             case s1 ~ e1 ~ e2 => Let(s1, e1, e2)
         }
@@ -47,12 +56,20 @@ class Parser extends RegexParsers {
 
         val funDefOpt = funDefinition ^^ { s => s }
 
-        letOpt | recFunDefOpt | funDefOpt | exprAS
+        ifthenelseOpt | letOpt | recFunDefOpt | funDefOpt | exprCmp
     }
 
+    def exprCmp: Parser[Expr] = {
+        exprAS ~ opt( ">=" ~ exprCmp ) ^^ {
+            case e1 ~ Some(">=" ~ e2) => Binary(Geq, e1, e2)
+            case e1 ~ None => e1
+        }
+    }
+    
     def exprAS: Parser[Expr] = {
-        exprMD ~ opt( "+" ~ exprAS ) ^^ {
+        exprMD ~ opt( ("+"|"-") ~ exprAS ) ^^ {
             case e1 ~ Some("+" ~ e2) => Binary(Plus, e1, e2)
+            case e1 ~ Some("-" ~ e2) => Binary(Minus, e1, e2)
             case e1 ~ None => e1
         }
     }
@@ -66,6 +83,11 @@ class Parser extends RegexParsers {
 
     def exprVal: Parser[Expr] = {
         ( floatingPointNumber ^^ { s => N(s.toFloat)} ) |
+        ( "true" ^^ { _ => B(true) } ) |
+        ( "false" ^^ { _ => B(false) } ) |
+        // https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
+        // THINK I NEED a package here... I think that is what Evan did
+        ( "'" ~> strLit <~ "'" ^^ { str => S(str) } ) |
           (  "(" ~> exprLev1 <~ ")" ) |
           ( identifier ~ rep(funCallArgs) ^^ {
             case s~Nil => Ident(s)

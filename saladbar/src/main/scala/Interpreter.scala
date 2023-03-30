@@ -19,10 +19,12 @@ class Interpreter(private var evalConditions: EvalConditions) {
     if (maxSteps <= 0 || e.isValue) sc(List(e))
     else {
       // TODO: capture lettuce error?
-      e.step(evalConditions){
+      e.stepWrapper(evalConditions){
         ep => evaluate(ep, maxSteps - 1) {
           t => sc(e :: t)
         }
+      }{
+        err => evaluate(LettuceError(err), maxSteps - 1)(sc)
       }
     }
   }

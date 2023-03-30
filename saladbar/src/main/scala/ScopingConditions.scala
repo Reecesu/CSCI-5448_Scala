@@ -53,7 +53,10 @@ case object ImplicitConversions extends TypeCondition {
   def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
     // TODO: bop class can have an (A, A) => B method
     bop match {
-      case Plus => sc(N(v1.toNum + v2.toNum)) // TODO: Strings
+      case Plus => (v1, v2) match {
+        case (S(_), _) | (_, S(_)) => sc(S(v1.toString + v2.toString)) // TODO: Strings
+        case _ => sc(N(v1.toNum + v2.toNum))
+      }
       case Times => sc(N(v1.toNum * v2.toNum))
       case Minus => sc(N(v1.toNum - v2.toNum))
       case Geq => sc(B(v1.toNum >= v2.toNum))
@@ -81,7 +84,7 @@ case object NoConversions extends TypeCondition {
     bop match {
       case Plus => (v1, v2) match {
         case (N(n1), N(n2)) => sc(N(n1 + n2))
-        // TODO: strings
+        case (S(s1), S(s2)) => sc(S(s1 + s2))
         case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
       }
       case Times => (v1, v2) match {

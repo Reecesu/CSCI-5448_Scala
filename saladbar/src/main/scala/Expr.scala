@@ -5,6 +5,13 @@ case class ExprToStringError(msg: String) extends Exception {
 
 sealed abstract class Expr {
     override def toString: String
+    def stepWrapper[A](evalConditions: EvalConditions)(sc: Expr => A)(fc: Throwable => A): A = {
+        try {
+            this.step(evalConditions)(sc)
+        } catch {
+            case err: Throwable => fc(err)
+        }
+    }
     def step[A](evalConditions: EvalConditions)(sc: Expr => A): A
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A
     def isValue: Boolean
@@ -193,9 +200,6 @@ case object Geq extends Bop {
     override def toString: String = ">="
 }
 
- // IfThenElse
-        // Geq
-        // Minus
 
 
 
@@ -245,6 +249,19 @@ case class B(b: Boolean) extends Value {
     override def toString: String = s"$b"
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
 }
+case class S(s: String) extends Value {
+    def toNum = {
+        try {
+            s.toDouble
+        } catch {
+            case _: Throwable => Double.NaN
+        }
+    }
+    def toBool: Boolean = s != ""
+    override def toString: String = s
+    def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
+}
+
 
 
 
