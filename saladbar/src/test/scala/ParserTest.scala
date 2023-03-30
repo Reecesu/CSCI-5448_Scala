@@ -18,6 +18,19 @@ class ParserTest extends  AnyFunSuite {
         assert(Binary(Times, N(1), N(2)) == parser.parse("1 * 2"))
     }
 
+    test("Eq1"){
+        assert(Binary(Eq, N(1), N(2)) == parser.parse("1 == 2"))
+    }
+    test("Eq2"){
+        assert(Binary(Eq, S("5"), N(5)) == parser.parse("'5' == 5"))
+    }
+    test("Eqq1"){
+        assert(Binary(Eqq, N(1), N(2)) == parser.parse("1 === 2"))
+    }
+    test("Eqq2"){
+        assert(Binary(Eqq, S("5"), N(5)) == parser.parse("'5' === 5"))
+    }
+
     test("ident"){
         assert(Ident("y") == parser.parse("y"))
     }

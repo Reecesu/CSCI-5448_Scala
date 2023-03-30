@@ -33,8 +33,9 @@ class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
                 }
             } catch {
                 case _: Throwable => {
-                    println(interpreter)
-                    lFound foreach println
+                    println(lFound.foldLeft(s"FAILED test\n\t$interpreter"){
+                        (s, e) => s"$s\n\t- $e"
+                    })
                     assert(v == vFound)
                 }
             }
@@ -47,6 +48,7 @@ class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
             case Some(eExpected) => assert(e == eExpected)
         }
 
+        // INTERPRETER tests
         assert(interpreters.length == vs.length)
         (interpreters zip vs) foreach {
             case (i, v) => myTest(i, e, v)
@@ -96,6 +98,31 @@ class IntegrationTest extends AnyFunSuite {
     test("ifelse") {
         val v = N(1)
         MyO("if ( true ) 1 else 2", v).exec
+    }
+
+    test("Cmp") {
+        MyO("1 >= 2", B(false)).exec
+        MyO("'hi' >= 'hi'", B(true)).exec
+        MyO("1 > 2", B(false)).exec
+        MyO("'hi' > 'hi'", B(false)).exec
+        MyO("1 <= 2", B(true)).exec
+        MyO("'hi' <= 'hi'", B(true)).exec
+        MyO("1 < 2", B(true)).exec
+        MyO("'hi' < 'hi'", B(false)).exec
+    }
+
+    test("Equality") {
+        val err = LettuceError(new InterpreterError("foo"))
+        val f = B(false)
+        val t = B(true)
+        MyO(s"1 == 2", f).exec
+        MyO(s"'5' == 5", List(err, err, t, t, err, err, t, t)).exec
+        MyO(s"1 === 2", f).exec
+        MyO(s"'5' === 5", List(err, err, f, f, err, err, f, f)).exec
+        MyO(s"1 != 2", t).exec
+        MyO(s"'5' != 5", List(err, err, f, f, err, err, f, f)).exec
+        MyO(s"1 !== 2", t).exec
+        MyO(s"'5' !== 5", List(err, err, t, t, err, err, t, t)).exec
     }
 
     test("fact4") {

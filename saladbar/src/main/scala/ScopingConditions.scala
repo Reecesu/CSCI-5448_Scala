@@ -52,23 +52,37 @@ case object DynamicScope extends ScopingCondition {
 
 abstract class TypeCondition {
     def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A
-    def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A
+    def performBop[A](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A
     def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A
 }
 case object ImplicitConversions extends TypeCondition {
   def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A = {
     sc()
   }
-  def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
+  def performBop[A](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
+
+    def hCmp(f: (Double, Double) => Boolean)(g: (String, String) => Boolean): A = {
+      (v1, v2) match {
+        case (S(s1), S(s2)) => sc(B(g(s1, s2)))
+        case _ => sc(B(f(v1.toNum, v2.toNum)))
+      }
+    }
     // TODO: bop class can have an (A, A) => B method
     bop match {
       case Plus => (v1, v2) match {
-        case (S(_), _) | (_, S(_)) => sc(S(v1.toString + v2.toString)) // TODO: Strings
+        case (S(_), _) | (_, S(_)) => sc(S(v1.toString + v2.toString))
         case _ => sc(N(v1.toNum + v2.toNum))
       }
       case Times => sc(N(v1.toNum * v2.toNum))
       case Minus => sc(N(v1.toNum - v2.toNum))
-      case Geq => sc(B(v1.toNum >= v2.toNum))
+      case Geq => hCmp { _ >= _ }{ _ >= _ }
+      case Gt => hCmp { _ > _ }{ _ > _ }
+      case Leq => hCmp { _ <= _ }{ _ <= _ }
+      case Lt => hCmp { _ < _ }{ _ < _ }
+      case Eq => hCmp { _ == _ }{ _ == _ }
+      case Neq => hCmp { _ != _ }{ _ != _ }
+      case Eqq => sc(B(v1 == v2))
+      case Neqq => sc(B(v1 != v2))
     }
   }
   def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A = {
@@ -92,7 +106,27 @@ case object NoConversions extends TypeCondition {
       case _ => throw new NoConversionsError(s"valid $bop not provided")
     }
   }
-  def performBop[A,B](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
+  def performBop[A](bop: Bop, v1: Value, v2: Value)(sc: Value => A): A = {
+
+    def hCmp[B](f: (Double, Double) => Boolean)(g: (String, String) => Boolean): A = {
+      (v1, v2) match {
+        case (N(n1), N(n2)) => sc(B(f(n1, n2)))
+        case (S(s1), S(s2)) => sc(B(g(s1, s2)))
+        case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+      }
+    }
+
+    def hEqality[B](f: (Value, Value) => Boolean): A = {
+      (v1, v2) match {
+        case (N(_), N(_)) 
+            | (S(_), S(_)) 
+            | (B(_), B(_)) 
+            | (Closure(_, _, _), Closure(_, _, _))
+            | (Undefined, Undefined) => sc(B(f(v1, v2)))
+        case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+      }
+    }
+
     bop match {
       case Plus => (v1, v2) match {
         case (N(n1), N(n2)) => sc(N(n1 + n2))
@@ -108,10 +142,14 @@ case object NoConversions extends TypeCondition {
         case (N(n1), N(n2)) => sc(N(n1 - n2))
         case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
       }
-      case Geq => (v1, v2) match {
-        case (N(n1), N(n2)) => sc(B(n1 >= n2))
-        case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
-      }
+      case Geq => hCmp { _ >= _ }{ _ >= _ }
+      case Gt => hCmp { _ > _ }{ _ > _ }
+      case Leq => hCmp { _ <= _ }{ _ <= _ }
+      case Lt => hCmp { _ < _ }{ _ < _ }
+      case Eq => hEqality{ _ == _ }
+      case Eqq => hEqality{ _ == _ }
+      case Neq => hEqality{ _ != _ }
+      case Neqq => hEqality{ _ != _ }
     }
   }
 

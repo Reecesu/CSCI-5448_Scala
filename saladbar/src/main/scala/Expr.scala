@@ -226,6 +226,27 @@ case object Minus extends Bop {
 case object Geq extends Bop {
     override def toString: String = ">="
 }
+case object Gt extends Bop {
+    override def toString: String = ">"
+}
+case object Leq extends Bop {
+    override def toString: String = "<="
+}
+case object Lt extends Bop {
+    override def toString: String = "<"
+}
+case object Eq extends Bop {
+    override def toString: String = "=="
+}
+case object Eqq extends Bop {
+    override def toString: String = "==="
+}
+case object Neq extends Bop {
+    override def toString: String = "!="
+}
+case object Neqq extends Bop {
+    override def toString: String = "!=="
+}
 
 
 
@@ -286,6 +307,12 @@ case class S(s: String) extends Value {
     }
     def toBool: Boolean = s != ""
     override def toString: String = s
+    def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
+}
+case object Undefined extends Value {
+    def toNum = Double.NaN
+    def toBool: Boolean = false
+    override def toString: String = "undefined"
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
 }
 

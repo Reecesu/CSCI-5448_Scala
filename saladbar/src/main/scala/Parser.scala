@@ -62,8 +62,16 @@ class Parser extends RegexParsers {
     }
 
     def exprCmp: Parser[Expr] = {
-        exprAS ~ opt( ">=" ~ exprCmp ) ^^ {
+        // NOTE: order matters: need === before == or it won't work correctly here.
+        exprAS ~ opt( ("==="|"!=="|">="|">"|"<="|"<"|"=="|"!=") ~ exprCmp ) ^^ {
             case e1 ~ Some(">=" ~ e2) => Binary(Geq, e1, e2)
+            case e1 ~ Some(">" ~ e2) => Binary(Gt, e1, e2)
+            case e1 ~ Some("<=" ~ e2) => Binary(Leq, e1, e2)
+            case e1 ~ Some("<" ~ e2) => Binary(Lt, e1, e2)
+            case e1 ~ Some("==" ~ e2) => Binary(Eq, e1, e2)
+            case e1 ~ Some("===" ~ e2) => Binary(Eqq, e1, e2)
+            case e1 ~ Some("!=" ~ e2) => Binary(Neq, e1, e2)
+            case e1 ~ Some("!==" ~ e2) => Binary(Neqq, e1, e2)
             case e1 ~ None => e1
         }
     }
