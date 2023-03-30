@@ -16,6 +16,33 @@ sealed abstract class Expr {
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A
     def isValue: Boolean
 }
+case class TryCatch(e1: Expr, e2: Expr) extends Expr {
+    override def toString: String = s"try { $e1 } catch { $e2 }"
+    def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
+        if (e1.isValue) {
+            sc(e1)
+        } else {
+            try {
+                e1.step(evalConditions){
+                    e1p => sc(TryCatch(e1p, e2))
+                }
+            } catch {
+                case err: Throwable => {
+                    println(s"TRY_CATCH found error: $err")
+                    sc(e2)
+                }
+            }
+        }
+    }
+    def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
+        e1.substitute(evalConditions, x, esub){
+            e1p => e2.substitute(evalConditions, x, esub){
+                e2p => sc(TryCatch(e1p, e2p))
+            }
+        }
+    }
+    def isValue: Boolean = false
+}
 case class IfThenElse(e1: Expr, e2: Expr, e3: Expr) extends Expr {
     override def toString: String = s"if ($e1) { $e2 } else { $e3 }"
     def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {

@@ -3,6 +3,9 @@ class EvalConditions(sc: ScopingCondition, tc: TypeCondition, lec: LazyEagerCond
   def getSc: ScopingCondition = this.sc
   def getTc: TypeCondition = this.tc
   def getLec: LazyEagerCondition = this.lec
+  override def toString: String = {
+    s"scoping_conditions: $sc, type_conditions: $tc, lazy_eager_condition: $lec"
+  }
 }
 
 abstract class ScopingCondition {
@@ -29,6 +32,9 @@ case object LexicalScope extends ScopingCondition {
         case _ => throw new LexicalScopingError("Failed substfunciton on input $e")
       }
     }
+  override def toString: String = {
+    "lexical"
+  }
 }
 
 case object DynamicScope extends ScopingCondition {
@@ -38,6 +44,9 @@ case object DynamicScope extends ScopingCondition {
         sc(Closure(id_parameter, e_functionBody, Extend(x, esub, env)))
       case _ => throw new DynamicScopingError("Failed substfunciton on input $e")
     }
+  }
+  override def toString: String = {
+    "dynamic"
   }
 }
 
@@ -64,6 +73,9 @@ case object ImplicitConversions extends TypeCondition {
   }
   def checkIf[A](v1: Value)( sc: Boolean => A )( fc: () => A ): A = {
     sc(v1.toBool)
+  }
+  override def toString: String = {
+    "implicite"
   }
 }
 
@@ -110,6 +122,10 @@ case object NoConversions extends TypeCondition {
     }
   }
 
+  override def toString: String = {
+    "none"
+  }
+
 }
 
 sealed abstract class LazyEagerCondition {
@@ -119,9 +135,16 @@ case object LazyCondition extends LazyEagerCondition {
     def check[A](e1: Expr)(sc: () => A)(fc: () => A): A = {
       sc()
     }
+  override def toString: String = {
+    "lazy"
+  }
 }
 case object EagerCondition extends LazyEagerCondition {
     def check[A](e1: Expr)(sc: () => A)(fc: () => A): A = {
       if (e1.isValue) sc() else fc()
     }
+
+    override def toString: String = {
+    "eager"
+  }
 }

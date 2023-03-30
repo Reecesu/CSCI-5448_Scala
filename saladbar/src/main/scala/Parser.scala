@@ -29,7 +29,6 @@ class Parser extends RegexParsers {
     def funDefinition: Parser[Closure] = { 
          ("function" ~"(") ~> identifier ~ (")" ~> exprLev1)  ^^ {
             case id~e => Closure(id, e, EmptyEnv)
-
         }   
     }  
 
@@ -42,6 +41,9 @@ class Parser extends RegexParsers {
             case e1 ~ e2 ~ e3 => IfThenElse(e1, e2, e3)
         }
         
+        val trycatchOpt = ("try" ~ "{" ~> exprLev1) ~ ("}" ~ "catch" ~ "{" ~> exprLev1) ~ "}" ^^ {
+            case e1 ~ e2 ~ _ => TryCatch(e1, e2)
+        }
         val letOpt = ("let" ~> identifier) ~ ("=" ~> exprLev1) ~ ("in" ~> exprLev1)  ^^ {
             case s1 ~ e1 ~ e2 => Let(s1, e1, e2)
         }
@@ -56,7 +58,7 @@ class Parser extends RegexParsers {
 
         val funDefOpt = funDefinition ^^ { s => s }
 
-        ifthenelseOpt | letOpt | recFunDefOpt | funDefOpt | exprCmp
+        ifthenelseOpt | trycatchOpt | letOpt | recFunDefOpt | funDefOpt | exprCmp
     }
 
     def exprCmp: Parser[Expr] = {

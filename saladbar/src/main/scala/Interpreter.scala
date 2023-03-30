@@ -29,4 +29,7 @@ class Interpreter(private var evalConditions: EvalConditions) {
     }
   }
 
+  override def toString: String = {
+    s"INTERPRETER{ $evalConditions }"
+  }
 }
