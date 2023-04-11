@@ -2,7 +2,8 @@
 OOAD Semester Project
 
 # to launch:
--> sbt start
+-> sbt run
+
 -> npm start
 
 Step 1: Build back-end and front-end
