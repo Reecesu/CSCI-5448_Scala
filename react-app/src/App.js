@@ -6,6 +6,9 @@ import Box from '@mui/material/Box';
 // import Drawer from './components/Drawer';
 import { Divider } from '@mui/material';
 
+
+export const StoreContext = React.createContext(null);
+
 function App() {
   const divStyle = {
     paddingRight: '20px'
@@ -20,9 +23,16 @@ function App() {
       <Divider variant="middle" />
       <br />
       <Box sx={{ display: 'flex', height: '100vh' }}>
-        <Expression />
-        <NewExpression />
-      </Box>
+
+        {/*
+         <StoreContext.Consumer>
+           {expr => <Expression expression={expr} />}
+         </StoreContext.Consumer>
+         */}
+         <Expression />
+
+         <NewExpression />
+       </Box>
     </div>
   );
 }

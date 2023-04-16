@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+// import { Typography, Box } from '@mui/material';
 
-export default function ExecutionSteps() {
+const Expression = (props) =>  {
+    // const [props, setResultField] = useState('');
+    // setResultField(props);
+    console.log("HELLO\n\n\n\n" + typeof(props));
+    console.log("YO\n\n\n\n" + props);
+    console.log("what if...\n\n\n\n");
     return (
         <Paper
             sx={{
@@ -15,10 +20,9 @@ export default function ExecutionSteps() {
             }}
             variant="outlined"
         >
-            <Typography variant="h10" sx={{ padding: 1}}>
-                Expression
-            </Typography>
+        {props.value}
         </Paper>
     );
 }
 
+export default Expression;

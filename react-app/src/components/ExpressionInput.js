@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
+import Expression from './Expression';
+import App from '../App.js';
 
-function ExpressionForm() {
+function ExpressionInput() {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
-  const [resultField, setResultField] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-      console.log(expression);
+    console.log(expression);
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/evaluate`, {
       method: 'POST',
       mode: 'cors',
@@ -23,7 +24,6 @@ function ExpressionForm() {
           },
           expression: expression
       })
-    //   body: JSON.stringify({ expression }),
     });
     console.log(response);
 
@@ -32,7 +32,9 @@ function ExpressionForm() {
     setResult(data.result);
 
     const jsonStr = JSON.stringify(data);
-    setResultField(jsonStr);
+    // Expression(expression=jsonStr);
+    Expression(jsonStr);
+    // App.StoreContext.store(jsonStr);
   };
 
   const formStyle = {
@@ -75,10 +77,9 @@ function ExpressionForm() {
           </Button>
         </div>
       </form>
-      <p>TODO: remove this part when integrated with new UI {resultField} </p>
       <Typography>{result}</Typography>
     </div>
   );
 }
 
-export default ExpressionForm;
+export default ExpressionInput;
