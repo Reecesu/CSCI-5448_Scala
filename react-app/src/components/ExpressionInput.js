@@ -4,21 +4,35 @@ import { Button, TextField, Typography } from '@mui/material';
 function ExpressionForm() {
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
+  const [resultField, setResultField] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+      console.log(expression);
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/evaluate`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hello: 'world'})
+      body: JSON.stringify({ 
+          // TODO: find out from user data
+          evaluationConditions: {
+              scope: "LexicalScope",
+              types: "NoConversions",
+              lazyEager: "EagerCondition"
+          },
+          expression: expression
+      })
+    //   body: JSON.stringify({ expression }),
     });
     console.log(response);
-  
+
     const data = await response.json();
     console.log('Server response:', data);
     setResult(data.result);
+
+    const jsonStr = JSON.stringify(data);
+    setResultField(jsonStr);
   };
 
   const formStyle = {
@@ -61,6 +75,7 @@ function ExpressionForm() {
           </Button>
         </div>
       </form>
+      <p>TODO: remove this part when integrated with new UI {resultField} </p>
       <Typography>{result}</Typography>
     </div>
   );
