@@ -13,35 +13,53 @@ function ExpressionForm() {
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ hello: 'world'})
-    //   body: JSON.stringify({ expression }),
     });
     console.log(response);
   
     const data = await response.json();
-    console.log('Server response:', data); // Add this line to log the server response
+    console.log('Server response:', data);
     setResult(data.result);
   };
 
   const formStyle = {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     marginBottom: '10px',
   };
 
   const textFieldStyle = {
-    marginRight: '10px',
+    marginBottom: '10px',
+    marginLeft: '10px',
+  };
+
+  const buttonStyle = {
+    marginLeft: '10px',
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit} style={formStyle}>
-        <TextField
+      <TextField
           label="Expression"
           value={expression}
           onChange={(e) => setExpression(e.target.value)}
           style={textFieldStyle}
+          fullWidth
+          multiline
+          rows={4}
         />
-        <Button type="submit" variant="contained">Evaluate</Button>
+        <div>
+          <Button type="submit" variant="contained" style={buttonStyle}>
+            Send
+          </Button>
+          <Button type="submit" variant="contained" style={buttonStyle}>
+            ← Back
+          </Button>
+          <Button type="submit" variant="contained" style={buttonStyle}>
+            Next →
+          </Button>
+        </div>
       </form>
       <Typography>{result}</Typography>
     </div>
