@@ -11,6 +11,8 @@ export const StoreContext = React.createContext(null);
 
 function App() {
   const [expression, setExpression] = useState(null);
+  const [newExpression, setNewExpression] = useState(null);
+
     // SPWI: nextExpression
   const divStyle = {
     paddingRight: '20px'
@@ -20,19 +22,13 @@ function App() {
     <div style={divStyle}>
       <h1>Welcome to the Lettuce Wrap!</h1>
       
-      <UserInput onExpressionChange={setExpression} />
+      <UserInput onExpressionChange={setExpression} onNewExpressionChange={setNewExpression}/>
       {/* <Drawer /> */}
       <Divider variant="middle" />
       <br />
       <Box sx={{ display: 'flex', height: '100vh' }}>
-
-        {/*
-         <StoreContext.Consumer>
-           {expr => <Expression expression={expr} />}
-         </StoreContext.Consumer>
-         */}
         <Expression expression={expression} />
-        <NewExpression />
+        <NewExpression expression={newExpression}/>
        </Box>
     </div>
   );

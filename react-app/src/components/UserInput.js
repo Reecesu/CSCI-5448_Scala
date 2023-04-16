@@ -5,27 +5,47 @@ import { Button, TextField } from '@mui/material';
 class ScalaExpr {
 
     constructor(index, expressions) {
+        this.updateRight = false;
         this.index = index;
         this.expressions = expressions;
         return;
     }
 
-    inc() {
-        this.index = this.index + 1;
-        const max = this.expressions.length - 1;
-        if (max < this.index) {
-            this.index = max;
+    inc(props) {
+        this.updateRight = !this.updateRight;
+        if (this.updateRight) {
+          this.index = this.index + 1;
+          const max = this.expressions.length - 1; 
+          if (max < this.index) {
+              this.index = max;
+              this.updateRight = !this.updateRight;
+          }
+          
+          props.onNewExpressionChange(this.expressions[this.index]);
         }
-        return;
+        else {
+          props.onExpressionChange(this.expressions[this.index]);
+          props.onNewExpressionChange('');
+          return;
+        }
     }
 
-    dec() {
-        this.index = this.index - 1;
-        const min = 0;
-        if (min > this.index) {
-            this.index = min;
+    dec(props) {
+        this.updateRight = !this.updateRight;
+        if (!this.updateRight) {
+          this.index = this.index - 1;
+          const min = 0;
+          if (min > this.index) {
+              this.index = min;
+              this.updateRight = !this.updateRight;
+          }
+        props.onExpressionChange(this.expressions[this.index]);
         }
-        return;
+        else {
+          props.onExpressionChange(this.expressions[this.index]);
+          props.onNewExpressionChange('');
+          return;
+        }
     }
 
     getExpr() {
@@ -55,7 +75,7 @@ function ExpressionInput(props) {
               lazyEager: "EagerCondition"
           },
           // expression: userExpression
-          expression: "let x = 1 + 2 in 3 * 4 + x"
+          expression: "1 + 2 * 3"
       })
     });
 
@@ -88,14 +108,17 @@ function ExpressionInput(props) {
   };
 
   const handleBack = () => {
-      scalaExpr.dec();
-      props.onExpressionChange(scalaExpr.getExpr());
+      scalaExpr.dec(props);
       return;
   };
 
   const handleNext = () => {
-      scalaExpr.inc();
-      props.onExpressionChange(scalaExpr.getExpr());
+      // 1 + 2 * 3
+      // 1 + 2 * 3 —> 1 + 6
+      // 1 + 6
+      // 1 + 6 —> 7
+      // 7
+      scalaExpr.inc(props);
       return;
   };
 
