@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography } from '@mui/material';
-import Expression from './Expression';
-import App from '../App.js';
+import { Button, TextField } from '@mui/material';
 
-function ExpressionInput() {
+function ExpressionInput(props) {
   const [expression, setExpression] = useState('');
-  const [result, setResult] = useState('');
+  // const [result] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,12 +27,12 @@ function ExpressionInput() {
 
     const data = await response.json();
     console.log('Server response:', data);
-    setResult(data.result);
+    props.onResultChange(data.message);
 
-    const jsonStr = JSON.stringify(data);
-    // Expression(expression=jsonStr);
-    Expression(jsonStr);
-    // App.StoreContext.store(jsonStr);
+    // const jsonStr = JSON.stringify(data);
+    // // Expression(expression=jsonStr);
+    // setResult(data.result)
+    // // App.StoreContext.store(jsonStr);
   };
 
   const formStyle = {
@@ -77,7 +75,6 @@ function ExpressionInput() {
           </Button>
         </div>
       </form>
-      <Typography>{result}</Typography>
     </div>
   );
 }

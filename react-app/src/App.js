@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ExpressionInput from './components/ExpressionInput';
 import Expression from './components/Expression';
 import NewExpression from './components/NewExpression';
@@ -10,6 +10,7 @@ import { Divider } from '@mui/material';
 export const StoreContext = React.createContext(null);
 
 function App() {
+  const [result, setResult] = useState(null);
   const divStyle = {
     paddingRight: '20px'
   };
@@ -18,7 +19,7 @@ function App() {
     <div style={divStyle}>
       <h1>Welcome to the Lettuce Wrap!</h1>
       
-      <ExpressionInput />
+      <ExpressionInput onResultChange={setResult} />
       {/* <Drawer /> */}
       <Divider variant="middle" />
       <br />
@@ -29,9 +30,8 @@ function App() {
            {expr => <Expression expression={expr} />}
          </StoreContext.Consumer>
          */}
-         <Expression />
-
-         <NewExpression />
+        <Expression result={result} />
+        <NewExpression />
        </Box>
     </div>
   );
