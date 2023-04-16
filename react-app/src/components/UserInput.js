@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
 
+
+class ScalaExpr {
+
+    constructor(index, expressions) {
+        this.index = index;
+        this.expressions = expressions;
+        return;
+    }
+
+    inc() {
+        this.index = this.index + 1;
+        const max = this.expressions.length - 1;
+        if (max < this.index) {
+            this.index = max;
+        }
+        return;
+    }
+
+    dec() {
+        this.index = this.index - 1;
+        const min = 0;
+        if (min > this.index) {
+            this.index = min;
+        }
+        return;
+    }
+
+    getExpr() {
+        return this.expressions[this.index]; 
+    }
+}
+
+const scalaExpr = new ScalaExpr(0, []);
+
 function ExpressionInput(props) {
-  const [expression, setExpression] = useState('');
+  const [userExpression, setUserExpression] = useState('');
   // const [result] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    console.log(expression);
+    console.log(userExpression);
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/evaluate`, {
       method: 'POST',
       mode: 'cors',
@@ -20,17 +54,19 @@ function ExpressionInput(props) {
               types: "NoConversions",
               lazyEager: "EagerCondition"
           },
-          expression: expression
+          // expression: userExpression
+          expression: "let x = 1 + 2 in 3 * 4 + x"
       })
     });
-    console.log(response);
 
     const data = await response.json();
+      // SPWI: update the json on backend and here
     console.log('Server response:', data);
-    props.onResultChange(data.message);
+    scalaExpr.expressions = data.message;
+    props.onExpressionChange(scalaExpr.getExpr());
 
     // const jsonStr = JSON.stringify(data);
-    // // Expression(expression=jsonStr);
+    // // Expression(userExpression=jsonStr);
     // setResult(data.result)
     // // App.StoreContext.store(jsonStr);
   };
@@ -51,13 +87,25 @@ function ExpressionInput(props) {
     marginLeft: '10px',
   };
 
+  const handleBack = () => {
+      scalaExpr.dec();
+      props.onExpressionChange(scalaExpr.getExpr());
+      return;
+  };
+
+  const handleNext = () => {
+      scalaExpr.inc();
+      props.onExpressionChange(scalaExpr.getExpr());
+      return;
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit} style={formStyle}>
       <TextField
           label="Expression"
-          value={expression}
-          onChange={(e) => setExpression(e.target.value)}
+          value={userExpression}
+          onChange={(e) => setUserExpression(e.target.value)}
           style={textFieldStyle}
           fullWidth
           multiline
@@ -67,10 +115,10 @@ function ExpressionInput(props) {
           <Button type="submit" variant="contained" style={buttonStyle}>
             Send
           </Button>
-          <Button type="submit" variant="contained" style={buttonStyle}>
+          <Button onClick={handleBack} variant="contained" style={buttonStyle}>
             ← Back
           </Button>
-          <Button type="submit" variant="contained" style={buttonStyle}>
+          <Button onClick={handleNext} variant="contained" style={buttonStyle}>
             Next →
           </Button>
         </div>

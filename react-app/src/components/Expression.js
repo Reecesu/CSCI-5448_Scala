@@ -1,9 +1,9 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
 
-const Expression = ({ result }) => {
-  console.log("HELLO\n\n\n\n" + typeof(result));
-  console.log("YO\n\n\n\n" + result);
+const Expression = ({ expression }) => {
+  console.log("HELLO\n\n\n\n" + typeof(expression));
+  console.log("YO\n\n\n\n" + expression);
   console.log("what if...\n\n\n\n");
   
   return (
@@ -18,7 +18,7 @@ const Expression = ({ result }) => {
       }}
       variant="outlined"
     >
-      <p>{JSON.stringify(result, null, 2)}</p>
+      <p>{JSON.stringify(expression, null, 2)}</p>
     </Paper>
   );
 }
