@@ -2,7 +2,7 @@ import React from 'react';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 
-export default function Evaluation() {
+export default function ExecutionSteps() {
     return (
         <Paper
             sx={{
@@ -14,10 +14,11 @@ export default function Evaluation() {
             mx: 1,
             }}
             variant="outlined"
-            >
+        >
             <Typography variant="h10" sx={{ padding: 1}}>
-                Execution Steps
+                Expression
             </Typography>
         </Paper>
     );
 }
+

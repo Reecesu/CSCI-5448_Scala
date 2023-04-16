@@ -1,9 +1,9 @@
 import React from 'react';
-import ExpressionForm from './components/ExpressionInput';
-import ExecutionSteps from './components/ExecutionSteps';
-import Evaluation from './components/Evaluation';
+import ExpressionInput from './components/ExpressionInput';
+import Expression from './components/Expression';
+import NewExpression from './components/NewExpression';
 import Box from '@mui/material/Box';
-import Drawer from './components/Drawer';
+// import Drawer from './components/Drawer';
 import { Divider } from '@mui/material';
 
 function App() {
@@ -15,13 +15,13 @@ function App() {
     <div style={divStyle}>
       <h1>Welcome to the Lettuce Wrap!</h1>
       
-      <ExpressionForm />
-      <Drawer />
+      <ExpressionInput />
+      {/* <Drawer /> */}
       <Divider variant="middle" />
       <br />
       <Box sx={{ display: 'flex', height: '100vh' }}>
-        <ExecutionSteps />
-        <Evaluation />
+        <Expression />
+        <NewExpression />
       </Box>
     </div>
   );
