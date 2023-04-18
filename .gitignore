@@ -115,9 +115,10 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-.env.test
+# # COMMENTED OUT AS ENV NEEDED IN REACT
+# # dotenv environment variables file
+# .env
+# .env.test
 
 # parcel-bundler cache (<a href="https://parceljs.org/" target="_blank" rel="noopener noreferrer">https://parceljs.org/</a>)
 .cache

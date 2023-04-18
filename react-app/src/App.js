@@ -1,12 +1,19 @@
-import React from 'react';
-import ExpressionInput from './components/ExpressionInput';
+import React, { useState } from 'react';
+import UserInput from './components/UserInput';
 import Expression from './components/Expression';
 import NewExpression from './components/NewExpression';
 import Box from '@mui/material/Box';
 // import Drawer from './components/Drawer';
 import { Divider } from '@mui/material';
 
+
+export const StoreContext = React.createContext(null);
+
 function App() {
+  const [expression, setExpression] = useState('');
+  const [newExpression, setNewExpression] = useState('');
+
+    // SPWI: nextExpression
   const divStyle = {
     paddingRight: '20px'
   };
@@ -15,14 +22,14 @@ function App() {
     <div style={divStyle}>
       <h1>Welcome to the Lettuce Wrap!</h1>
       
-      <ExpressionInput />
+      <UserInput onExpressionChange={setExpression} onNewExpressionChange={setNewExpression}/>
       {/* <Drawer /> */}
       <Divider variant="middle" />
       <br />
       <Box sx={{ display: 'flex', height: '100vh' }}>
-        <Expression />
-        <NewExpression />
-      </Box>
+        <Expression expression={expression} />
+        <NewExpression expression={newExpression}/>
+       </Box>
     </div>
   );
 }

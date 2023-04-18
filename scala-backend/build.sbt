@@ -6,9 +6,12 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.13.10"
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % "test"
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 libraryDependencies += "ch.megard" %% "akka-http-cors" % "1.2.0"
+// // org.scalatestplus.play has a dependency already
+// libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "CU-boulder.controllers._"
