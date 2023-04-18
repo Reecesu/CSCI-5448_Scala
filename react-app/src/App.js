@@ -10,8 +10,8 @@ import { Divider } from '@mui/material';
 export const StoreContext = React.createContext(null);
 
 function App() {
-  const [expression, setExpression] = useState(null);
-  const [newExpression, setNewExpression] = useState(null);
+  const [expression, setExpression] = useState('');
+  const [newExpression, setNewExpression] = useState('');
 
     // SPWI: nextExpression
   const divStyle = {

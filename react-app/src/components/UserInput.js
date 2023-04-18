@@ -19,33 +19,37 @@ class ScalaExpr {
           if (max < this.index) {
               this.index = max;
               this.updateRight = !this.updateRight;
+              props.onNewExpressionChange("You cannot step on a value");
+          } else {
+              props.onNewExpressionChange(this.expressions[this.index]);
           }
-          
-          props.onNewExpressionChange(this.expressions[this.index]);
-        }
-        else {
+        } else {
           props.onExpressionChange(this.expressions[this.index]);
           props.onNewExpressionChange('');
-          return;
         }
+        console.log(this.updateRight);
+        console.log(this.index);
     }
 
     dec(props) {
         this.updateRight = !this.updateRight;
-        if (!this.updateRight) {
+        if (this.updateRight) {
           this.index = this.index - 1;
           const min = 0;
           if (min > this.index) {
               this.index = min;
               this.updateRight = !this.updateRight;
+          } else {
+              props.onExpressionChange(this.expressions[this.index]);
+              props.onNewExpressionChange(this.expressions[this.index + 1]);
           }
-        props.onExpressionChange(this.expressions[this.index]);
-        }
-        else {
+        } else {
+            // SPWI: still off by something...
           props.onExpressionChange(this.expressions[this.index]);
           props.onNewExpressionChange('');
-          return;
         }
+        console.log(this.updateRight);
+        console.log(this.index);
     }
 
     getExpr() {
@@ -63,32 +67,39 @@ function ExpressionInput(props) {
     e.preventDefault();
   
     console.log(userExpression);
+    const debug = false;
+    const debugExpr = "1 + 2 * 3";
     const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/evaluate`, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
           // TODO: find out from user data
+          // // scope: lexical | dynamic
+          // // type: implicite | none
+          // // lazyEager: lazy | eager
           evaluationConditions: {
-              scope: "LexicalScope",
-              types: "NoConversions",
-              lazyEager: "EagerCondition"
+              scope: "lexical",
+              types: "none",
+              lazyEager: "eager"
           },
-          // expression: userExpression
-          expression: "1 + 2 * 3"
+          expression: (debug) ? debugExpr : userExpression
       })
     });
 
-    const data = await response.json();
-      // SPWI: update the json on backend and here
-    console.log('Server response:', data);
-    scalaExpr.expressions = data.message;
-    props.onExpressionChange(scalaExpr.getExpr());
 
-    // const jsonStr = JSON.stringify(data);
-    // // Expression(userExpression=jsonStr);
-    // setResult(data.result)
-    // // App.StoreContext.store(jsonStr);
+    /**
+     * {
+     *  "expression": "<>",
+     *  "value": "<>",
+     *  "steps": ["<>"]
+     * }
+     */
+    const data = await response.json();
+    console.log('Server response:', data);
+    scalaExpr.expressions = data.steps;
+    props.onExpressionChange(scalaExpr.getExpr());
+    props.onNewExpressionChange('');
   };
 
   const formStyle = {
