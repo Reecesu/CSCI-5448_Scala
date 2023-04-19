@@ -126,6 +126,69 @@ class IntegrationTest extends AnyFunSuite {
         MyO(s"'5' !== 5", List(err, err, t, t, err, err, t, t)).exec
     }
 
+
+    test("and") {
+        MyO("true && 5", List(N(5), N(5), N(5), N(5), N(5), N(5), N(5), N(5))).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("5 && true", List(err, err, B(true), B(true), err, err, B(true), B(true))).exec
+    }
+
+    test("or") {
+        MyO("false || 0", List(N(0), N(0), N(0), N(0), N(0), N(0), N(0), N(0))).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("0 || false", List(err, err, B(false), B(false), err, err, B(false), B(false))).exec
+    }
+
+    test("neg") {
+        val v = N(2)
+        MyO("-(-(2))", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("-(-(true)) + 1", List(err, err, v, v, err, err, v, v)).exec
+    }
+
+    test("not") {
+        val v = B(false)
+        MyO("!(!(false))", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("!(3155) && idk", List(err, err, v, v, err, err, v, v)).exec
+    }
+
+    test("sin") {
+        val v = N(0)
+        MyO("sin(0)", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("sin(!(3155))", List(err, err, v, v, err, err, v, v)).exec
+    }
+
+    test("cos") {
+        val v = N(1)
+        MyO("cos(0)", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("cos(!(3155))", List(err, err, v, v, err, err, v, v)).exec
+    }
+
+    test("log") {
+        val v = N(0)
+        MyO("log(1)", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("log(!(''))", List(err, err, v, v, err, err, v, v)).exec
+    }
+
+    test("exp") {
+        val v = N(1)
+        MyO("exp(0)", List(v, v, v, v, v, v, v, v)).exec
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO("exp(!(3155))", List(err, err, v, v, err, err, v, v)).exec
+    }
+
     test("fact4") {
         val v = N(24)  // 4 * 3  2
         MyO("letrec f = function(x) if (1 >= x) 1 else x * f(x - 1) in f(4)", v).exec
@@ -159,5 +222,11 @@ class IntegrationTest extends AnyFunSuite {
         MyO(s, List(N(3), N(3), N(3), N(3), N(4), N(4), N(4), N(4))).exec
     }
 
-    
+    test("variance 4") {
+        val s = "let x = sin(!('') - 1) + 3 in let f = function(y) x in let x = try { x + true } catch { x + 1 }in f(try { x * false } catch { x * 0 })"
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        MyO(s, List(err, err, N(3), N(3), err, err, N(4), N(4))).exec
+    }
+
 }

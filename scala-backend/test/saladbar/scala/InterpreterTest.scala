@@ -159,4 +159,16 @@ class InterpreterTest extends AnyFunSuite {
         dynamicInterpreterValueTest(eMaker(-1), N(1))
         dynamicInterpreterValueTest(eMaker(3), N(6))
     }
+
+    test("and"){
+      lexicalInterpreterValueTest(Binary(And, B(true), N(5)), N(5))
+    }
+    test("or"){
+      lexicalInterpreterValueTest(Binary(Or, B(true), N(5)), B(true))
+    }
+
+    test("cos"){
+      lexicalInterpreterValueTest(Unary(Cos, N(0)), N(1))
+    }
+
 }

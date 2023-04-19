@@ -66,4 +66,12 @@ class ParserTest extends  AnyFunSuite {
     test("funcall"){
         assert(Let("f", Closure("x", N(1), EmptyEnv), FunCall(Ident("f"), N(2))) == parser.parse("let f = function(x) 1 in f(2)"))
     }
+
+    test("negation") {
+        assert(Unary(Neg, N(1)) == parser.parse("-(1)"))
+    }
+
+    test("cos") {
+        assert(Unary(Cos, N(0)) == parser.parse("cos(0)"))
+    }
 }

@@ -60,7 +60,15 @@ class Parser extends RegexParsers {
 
         val funDefOpt = funDefinition ^^ { s => s }
 
-        ifthenelseOpt | trycatchOpt | letOpt | recFunDefOpt | funDefOpt | exprCmp
+        ifthenelseOpt | trycatchOpt | letOpt | recFunDefOpt | funDefOpt | exprAndOr
+    }
+
+    def exprAndOr: Parser[Expr] = {
+        exprCmp ~ opt( ("&&"|"||") ~ exprAndOr ) ^^ {
+            case e1 ~ Some("&&" ~ e2) => Binary(And, e1, e2)
+            case e1 ~ Some("||" ~ e2) => Binary(Or, e1, e2)
+            case e1 ~ None => e1
+        }
     }
 
     def exprCmp: Parser[Expr] = {
@@ -97,6 +105,15 @@ class Parser extends RegexParsers {
         ( floatingPointNumber ^^ { s => N(s.toFloat)} ) |
         ( "true" ^^ { _ => B(true) } ) |
         ( "false" ^^ { _ => B(false) } ) |
+        // NOTE requirement for () in uop(e)
+        ( ( "sin" | "cos" | "log" | "exp" | "!" | "-" ) ~ ("(" ~> exprLev1 <~ ")") ^^{
+            case "sin" ~ e => Unary(Sin, e)
+            case "cos" ~ e => Unary(Cos, e)
+            case "log" ~ e => Unary(Log, e)
+            case "exp" ~ e => Unary(Exp, e)
+            case "!" ~ e => Unary(Not, e)
+            case "-" ~ e => Unary(Neg, e)
+        } ) |
         // https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
         // THINK I NEED a package here... I think that is what Evan did
         ( "'" ~> strLit <~ "'" ^^ { str => S(str) } ) |

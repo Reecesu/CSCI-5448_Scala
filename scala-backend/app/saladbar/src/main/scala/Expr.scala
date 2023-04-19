@@ -70,9 +70,38 @@ case class IfThenElse(e1: Expr, e2: Expr, e3: Expr) extends Expr {
     }
     def isValue: Boolean = false
 }
+
+case class Unary(uop: Uop, e1: Expr) extends Expr {
+    override def toString: String =  s"($uop($e1))"
+    def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
+        if (e1.isValue) {
+            evalConditions.getTc.performUop(uop, e1.asInstanceOf[Value])(sc)
+        } else {
+            e1.step(evalConditions) {
+                e1p => sc(Unary(uop, e1p))
+            }
+        }
+    }
+    def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
+        e1.substitute(evalConditions, x, esub){
+            e1p => sc(Unary(uop, e1p))
+        }
+    }
+    def isValue: Boolean = false
+
+}
+
 case class Binary(bop: Bop, e1: Expr, e2: Expr) extends Expr {
     override def toString: String =  s"($e1 $bop $e2)"
     def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
+      if (bop == And | bop == Or) {
+        (e1, e2) match {
+          case (v1, e2) if v1.isValue => evalConditions.getTc.performShortCircuitBop(bop, v1.asInstanceOf[Value], e2)(sc)
+          case (e1, e2) => e1.step(evalConditions){
+            e1p => sc(Binary(bop, e1p, e2))
+          }
+        }
+      } else {
         (e1, e2) match {
             case (v1, v2) if v1.isValue && v2.isValue => evalConditions.getTc.performBop(bop, v1.asInstanceOf[Value], v2.asInstanceOf[Value])(sc)
             case (v1, e2) if v1.isValue => evalConditions.getTc.checkBop1(bop, v1.asInstanceOf[Value]){
@@ -84,6 +113,7 @@ case class Binary(bop: Bop, e1: Expr, e2: Expr) extends Expr {
                 e1p => sc(Binary(bop, e1p, e2))
             }
         }
+      }
     }
 
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
@@ -212,8 +242,37 @@ case class LetRec(id_functionName: String,
 
 
 
+sealed trait Uop {
+    override def toString: String
+}
+case object Neg extends Uop {
+    override def toString: String = "-"
+}
+case object Not extends Uop {
+    override def toString: String = "!"
+}
+case object Sin extends Uop {
+    override def toString: String = "sin"
+}
+case object Cos extends Uop {
+    override def toString: String = "cos"
+}
+case object Log extends Uop {
+    override def toString: String = "log"
+}
+case object Exp extends Uop {
+    override def toString: String = "exp"
+}
+
+
 sealed trait Bop {
     override def toString: String
+}
+case object And extends Bop{
+    override def toString: String = "&&"
+}
+case object Or extends Bop{
+    override def toString: String = "||"
 }
 case object Plus extends Bop {
     override def toString: String = "+"
@@ -307,7 +366,7 @@ case class S(s: String) extends Value {
         }
     }
     def toBool: Boolean = s != ""
-    override def toString: String = s
+    override def toString: String = s"'$s'"
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
 }
 case object Undefined extends Value {
