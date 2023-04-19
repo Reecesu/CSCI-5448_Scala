@@ -2,10 +2,35 @@
 OOAD Semester Project
 
 # to launch:
--> sbt run
+## prerequisites
+* need `sbt` installed
+* need `npm` installed
 
--> npm start
+## instructions
+* two terminals
+* terminal 1:
+    * cd scala-backend;
+    * sbt compile;
+        * only need to do this once or after changes to the scala baseline, not each time you run it
+    * sbt run;
+        * NOTE: in addition to ctrl + c killing this, just pressing enter will kill this
+* terminal 2:
+    * cd react-app;
+    * NOTE: unsure if we need to load package.json in some way or if that is handled for us by `npm` 
+        * only need to do this once or after changes to package.json, not each time you run it
+    * npm start;
 
+## instructions short
+* two terminals
+* terminal 1:
+    * cd scala-backend;
+    * sbt run;
+* terminal 2:
+    * cd react-app;
+    * npm start;
+
+
+# development notes
 Step 1: Build back-end and front-end
 
 	npx create-react-app react-app
