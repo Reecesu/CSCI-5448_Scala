@@ -6,7 +6,7 @@ OOAD Semester Project
 * need `sbt` installed
 * need `npm` installed
 
-## instructions
+## Instructions
 * two terminals
 * terminal 1:
     * cd scala-backend;
@@ -20,7 +20,7 @@ OOAD Semester Project
         * only need to do this once or after changes to package.json, not each time you run it
     * npm start;
 
-## instructions short
+## Instructions tl;dr
 * two terminals
 * terminal 1:
     * cd scala-backend;
@@ -30,7 +30,7 @@ OOAD Semester Project
     * npm start;
 
 
-# development notes
+# Development notes
 Step 1: Build back-end and front-end
 
 	npx create-react-app react-app
