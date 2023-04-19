@@ -11,6 +11,21 @@ class ScalaExpr {
         return;
     }
 
+    reset(expr) {
+        this.expressions = [];
+        this.index = 0;
+        this.updateRight = false;
+    }
+
+    /**
+     * Handle logic to display things like: 
+     *
+     * 1 + 2 * 3
+     * 1 + 2 * 3 —> 1 + 6
+     * 1 + 6
+     * 1 + 6 —> 7
+     * 7
+     */
     inc(props) {
         this.updateRight = !this.updateRight;
         if (this.updateRight) {
@@ -64,8 +79,14 @@ function ExpressionInput(props) {
   // const [result] = useState('');
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
-  
+
+    props.onExpressionChange('');
+    props.onNewExpressionChange('');
+
+    scalaExpr.reset();
+
     console.log(userExpression);
     const debug = false;
     const debugExpr = "1 + 2 * 3";
@@ -80,8 +101,8 @@ function ExpressionInput(props) {
           // // lazyEager: lazy | eager
           evaluationConditions: {
               scope: "lexical",
-              types: "none",
-              lazyEager: "eager"
+              types: "implicite",
+              lazyEager: "lazy"
           },
           expression: (debug) ? debugExpr : userExpression
       })
@@ -124,11 +145,6 @@ function ExpressionInput(props) {
   };
 
   const handleNext = () => {
-      // 1 + 2 * 3
-      // 1 + 2 * 3 —> 1 + 6
-      // 1 + 6
-      // 1 + 6 —> 7
-      // 7
       scalaExpr.inc(props);
       return;
   };
