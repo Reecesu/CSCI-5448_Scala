@@ -95,8 +95,9 @@ class Parser extends RegexParsers {
     }
 
     def exprMD: Parser[Expr] = {
-        exprVal ~ opt( "*" ~ exprMD ) ^^ {
+        exprVal ~ opt( ("*"|"/") ~ exprMD ) ^^ {
             case e1 ~ Some("*" ~ e2) => Binary(Times, e1, e2)
+            case e1 ~ Some("/" ~ e2) => Binary(Div, e1, e2)
             case e1 ~ None => e1
         }
     }
