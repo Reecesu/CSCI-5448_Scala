@@ -1,6 +1,10 @@
 package saladbar
 
+
+
 import scala.util.parsing.combinator.RegexParsers
+
+
 
 case class SyntaxError(s: String) extends Exception {
     override def toString: String = { 
@@ -8,25 +12,69 @@ case class SyntaxError(s: String) extends Exception {
     }   
 }
 
+
 /**
+  * Parser
+  * 
+  * OO PATTERN: Parser
+  * 
+  * relevant grammar in EBNF::
+  * 
+  *           exprLev1 ::= if (exprLev1) exprLev1 else exprLev1
+  *                    | try { exprLev1 } catch { exprLev1 }
+  *                    | let exprLev1 = exprLev1 in exprLev1
+  *                    | letrec exprLev1 = funDefinition in exprLev1
+  *                    | functionDefinition
+  *                    | exprAndOr
+  * functionDefinition ::= function(identifier) exprLev1
+  *          exprAndOr ::= exprCmp { && exprAndOr | \|\| exprAndOr }
+  *            exprCmp ::= exprAS { === exprCmp 
+  *                               | !==  exprCmp
+  *                               | >=  exprCmp
+  *                               | > exprCmp
+  *                               | <=  exprCmp
+  *                               | <  exprCmp
+  *                               | ==  exprCmp
+  *                               | !=  exprCmp }
+  *             exprAS ::= exprMD { + exprAS | - exprAS }
+  *             exprMD ::= exprVal { * exprMD | / exprMD }
+  *            exprVal ::= n
+  *                    | b
+  *                    | { sin | cos | log | exp | ! | - }(exprLev1)
+  *                    | s
+  *                    | (exprLev1)
+  *                    | identifier
+  * 
+  * identifier is a valid variable name
+  * n is a floating point number
+  * b is a boolean value true or false all lowercase
+  * s is a string
+  * 
+  * NOTE requirement for () in uop(e)
+  * 
+  * 
   * ADDAPTED FROM: https://github.com/sriram0339/LettucePlaygroundScala
   *   - https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala
   * and: https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
   * 
   */
 class Parser extends RegexParsers {
-    // TODO: Geq, IfThenElse, Minus
+
+
     def floatingPointNumber: Parser[String] = { 
         """-?(\d+(\.\d*)?|\d*\.\d+)([eE][+-]?\d+)?[fFdD]?""".r
     }   
+
 
     def identifier: Parser[String] = { 
         """[a-zA-Z_][a-zA-Z0-9_]*""".r
     }  
 
-    def strLit: Parser[String] = { 
+
+    def strLitteral: Parser[String] = { 
         """[^']*""".r
     }
+
 
     def funDefinition: Parser[Closure] = { 
          ("function" ~"(") ~> identifier ~ (")" ~> exprLev1)  ^^ {
@@ -34,9 +82,11 @@ class Parser extends RegexParsers {
         }   
     }  
 
+
     def funCallArgs: Parser[Expr] = {
         "(" ~> exprLev1 <~ ")"
     }
+
 
     def exprLev1: Parser[Expr] = {
         val ifthenelseOpt = ("if" ~ "(" ~> exprLev1) ~ (")" ~> exprLev1) ~ ("else" ~> exprLev1)  ^^ {
@@ -116,8 +166,7 @@ class Parser extends RegexParsers {
             case "-" ~ e => Unary(Neg, e)
         } ) |
         // https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
-        // THINK I NEED a package here... I think that is what Evan did
-        ( "'" ~> strLit <~ "'" ^^ { str => S(str) } ) |
+        ( "'" ~> strLitteral <~ "'" ^^ { str => S(str) } ) |
           (  "(" ~> exprLev1 <~ ")" ) |
           ( identifier ~ rep(funCallArgs) ^^ {
             case s~Nil => Ident(s)
@@ -126,7 +175,14 @@ class Parser extends RegexParsers {
     }
 
 
-
+    /**
+      * parse
+      * 
+      * parse string $s of assumed concrete langauge syntax
+      * to Expr $e of abstract langauge syntax. return $e.
+      *
+      * @param s
+      */
     def parse(s: String): Expr = {
         val e = parseAll(exprLev1, s)  // RegexParsers.parseAll
         e match {
@@ -135,4 +191,7 @@ class Parser extends RegexParsers {
             case Error(msg, _) => throw new IllegalArgumentException("Error: " + msg)
         }
     }
+
+
 }
+
