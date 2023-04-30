@@ -57,6 +57,7 @@ class Interpreter(private var evalConditions: EvalConditions) {
     * @return
     */
   private def evaluate[A](e: Expr, maxSteps: Int)(sc: List[Expr] => A): A = {
+    println(e)
     if (maxSteps <= 0 || e.isValue) sc(List(e))
     else {
       e.stepWrapper(evalConditions){
@@ -64,7 +65,9 @@ class Interpreter(private var evalConditions: EvalConditions) {
           expressionSoFar => sc(e :: expressionSoFar)
         }
       }{
-        err => evaluate(LettuceError(err), maxSteps - 1)(sc)
+        err => evaluate(LettuceError(err), maxSteps - 1){
+          expressionSoFar => sc(e :: expressionSoFar)
+        }
       }
     }
   }
