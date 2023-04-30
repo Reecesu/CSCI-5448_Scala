@@ -8,6 +8,7 @@ package saladbar
   * Determine the sequence of steps during evaluation of the expression.
   * 
   * OO Pattern: Interpreter
+  * OO PATTERN: Model (in MVC-VM, not the ViewModel, just the model)
   * 
   * @param evalConditions
   */
