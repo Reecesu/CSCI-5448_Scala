@@ -6,6 +6,8 @@ package saladbar
   * 
   * a collection of values. 
   * Implemented in single file for convenience
+  * 
+  * OO PATTERN: Composite
   */
 abstract class Value extends Expr {
     def toNum: Double

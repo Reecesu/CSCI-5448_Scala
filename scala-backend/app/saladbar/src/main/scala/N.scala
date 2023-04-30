@@ -5,6 +5,8 @@ package saladbar
   * N(n)
   * concrete syntax for a number n
   *
+  * OO PATTERN: Composite
+  * 
   * @param n
   */
 case class N(n: Double) extends Value {

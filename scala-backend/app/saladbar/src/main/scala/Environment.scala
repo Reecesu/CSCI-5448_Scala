@@ -7,6 +7,9 @@ package saladbar
   * A potentially cicular data structure used here to allow
   * for dynamic scoping in a small step interpreter as 
   * elements of closures.
+  * 
+  * OO PATTERN: Composite
+  * 
   */
 sealed trait Environment {
 

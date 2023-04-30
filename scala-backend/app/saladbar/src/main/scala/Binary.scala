@@ -5,6 +5,8 @@ package saladbar
   * Binary(bop, e1, e2)
   * from concrete syntax: e1 bop e2
   *
+  * OO PATTERN: Composite
+  * 
   * @param bop
   * @param e1
   * @param e2

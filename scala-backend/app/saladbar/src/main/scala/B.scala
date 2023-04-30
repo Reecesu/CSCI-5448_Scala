@@ -5,6 +5,8 @@ package saladbar
   * B(b)
   * concrete syntax of a boolean value true or false
   *
+  * OO PATTERN: Composite
+  * 
   * @param b
   */
 case class B(b: Boolean) extends Value {

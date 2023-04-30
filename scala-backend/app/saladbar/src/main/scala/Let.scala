@@ -5,6 +5,8 @@ package saladbar
   * Let(id, e1, e2)
   * 
   * from concrete syntax: let id = e1 in e2
+  * 
+  * OO PATTERN: Composite
   *
   * @param id
   * @param e1

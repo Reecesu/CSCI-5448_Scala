@@ -5,6 +5,8 @@ package saladbar
   * FunCall(e1, e2)
   * 
   * from concrete syntax: e1(e2)
+  * 
+  * OO PATTERN: Composite
   *
   * @param e1
   * @param e2

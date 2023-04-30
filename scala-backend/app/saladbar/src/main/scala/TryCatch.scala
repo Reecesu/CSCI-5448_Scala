@@ -5,6 +5,11 @@ package saladbar
   * TryCatch(e1, e2)
   * 
   * from concrete syntax: try { e1 } catch { e2 }
+  * 
+  * OO PATTERN: Composite
+  *
+  * @param e1
+  * @param e2
   */
 case class TryCatch(e1: Expr, e2: Expr) extends Expr {
 

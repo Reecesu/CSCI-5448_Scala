@@ -5,6 +5,8 @@ package saladbar
   * S(s)
   * concrete syntax of string s
   *
+  * OO PATTERN: Composite
+  * 
   * @param s
   */
 case class S(s: String) extends Value {

@@ -3,7 +3,10 @@ package saladbar
 
 /**
   * LetRec(id_functionName, closure, e2)
+  * 
   * from concrete syntax: letrec id_functionName = closure in e2
+  * 
+  * OO PATTERN: Composite
   *
   * @param id_functionName
   * @param closure

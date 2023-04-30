@@ -5,6 +5,8 @@ package saladbar
   * IfThenElse(e1, e2, e3)
   * 
   * from concrete syntax: if (e1) e2 else e3
+  * 
+  * OO PATTERN: Composite
   */
 case class IfThenElse(e1: Expr, e2: Expr, e3: Expr) extends Expr {
 

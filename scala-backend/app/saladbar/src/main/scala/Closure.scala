@@ -3,10 +3,13 @@ package saladbar
 
 /**
   * Closure(id_parameter, e_funcitonBody, env)
+  * 
   * a sudo concrete syntax of function. 
   * developers write function(id_parameter) e_funcitonBody
   * and it parses to CLOSURE(id_parameter, e_funcitonBody, env) 
   * for scoping reasons
+  * 
+  * OO PATTERN: Composite
   *
   * @param id_parameter
   * @param e_funcitonBody

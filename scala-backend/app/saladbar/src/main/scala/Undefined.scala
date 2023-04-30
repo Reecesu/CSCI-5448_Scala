@@ -7,6 +7,8 @@ package saladbar
   * 
   * a common value of printing
   * 
+  * OO PATTERN: Composite
+  * 
   * TODO: implement printing in saladbar
   */
 case object Undefined extends Value {

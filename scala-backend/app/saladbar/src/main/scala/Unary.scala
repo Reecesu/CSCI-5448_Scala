@@ -5,6 +5,8 @@ package saladbar
   * Unary(uop, e1)
   * from concrete syntax: uop(e1)
   *
+  * OO PATTERN: Composite
+  * 
   * @param uop
   * @param e1
   */
