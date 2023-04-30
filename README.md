@@ -1,6 +1,7 @@
 # LettuceWrap
 OOAD Semester Project
 
+
 # to launch:
 ## prerequisites
 * need `sbt` installed
@@ -16,8 +17,14 @@ OOAD Semester Project
         * NOTE: in addition to ctrl + c killing this, just pressing enter will kill this
 * terminal 2:
     * cd react-app;
-    * NOTE: unsure if we need to load package.json in some way or if that is handled for us by `npm` 
-        * only need to do this once or after changes to package.json, not each time you run it
+    * NEEDS TESTING:
+        * try to work without this command
+        * npm install @material-ui/core;
+        * if not needed then remove this part from the readme
+        * if needed then update readme to note that this is needed the very first time you run the code
+    * npm install;
+        * must run this the very first time.
+        * must run this if making changes to package.json
     * npm start;
 
 ## Instructions tl;dr
@@ -28,6 +35,10 @@ OOAD Semester Project
 * terminal 2:
     * cd react-app;
     * npm start;
+
+
+# TODO
+* consider an update the UI with a page to explain the langauge grammar/a general how to page
 
 
 # Development notes
