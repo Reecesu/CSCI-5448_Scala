@@ -81,3 +81,8 @@ case object Neqq extends Bop {
     override def toString: String = "!=="
 }
 
+
+case object Seq extends Bop {
+    override def toString: String = ";"
+}
+

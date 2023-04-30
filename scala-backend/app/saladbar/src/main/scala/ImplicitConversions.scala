@@ -72,6 +72,7 @@ case object ImplicitConversions extends TypeCondition {
         bop match {
             case And => if (v1.toBool) sc(e2) else sc(v1)
             case Or => if (v1.toBool) sc(v1) else sc(e2)
+            case Seq => sc(e2)
             case _ => ???
         }
     }

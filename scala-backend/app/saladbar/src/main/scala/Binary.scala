@@ -38,7 +38,7 @@ case class Binary(bop: Bop, e1: Expr, e2: Expr) extends Expr {
       */
     def step[A](evalConditions: EvalConditions)(sc: Expr => A): A = {
 
-      if (bop == And | bop == Or) {
+      if (bop == And | bop == Or | bop == Seq) {
         (e1, e2) match {
           case (v1, e2) if v1.isValue => evalConditions.getTc.performShortCircuitBop(bop, v1.asInstanceOf[Value], e2)(sc)
           case (e1, e2) => e1.step(evalConditions){

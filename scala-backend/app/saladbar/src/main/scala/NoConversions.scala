@@ -58,7 +58,7 @@ case object NoConversions extends TypeCondition {
                 case B(_) => sc()
                 case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
             }
-            case Eq | Neq | Eqq | Neqq => sc()
+            case Eq | Neq | Eqq | Neqq | Seq => sc()
             case Gt | Geq | Lt | Leq | Plus => v1 match {
                 case N(_) | S(_) => sc()
                 case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
@@ -77,6 +77,9 @@ case object NoConversions extends TypeCondition {
       * 
       * currently only And/Or support shortcircuiting ops
       * here, v1 must already represent true/false
+      * 
+      * TODO: refactor as `attemptExecution` and have an fc to hold the step on e2 logic
+      *     from client.
       *
       * @param bop
       * @param v1
@@ -89,8 +92,12 @@ case object NoConversions extends TypeCondition {
             case B(b1) => bop match {
                 case And => if (b1) sc(e2) else sc(v1)
                 case Or => if (b1) sc(v1) else sc(e2)
+               
             }
-            case _ => throw new NoConversionsError("expected boolean")
+            case _ =>  bop match {
+                case Seq => sc(e2)
+                case _ => throw new NoConversionsError("expected boolean")
+            }
         }
     }
 
