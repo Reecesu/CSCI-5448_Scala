@@ -277,6 +277,15 @@ class IntegrationTest extends AnyFunSuite {
                     v2, v2)).exec
     }
 
+    test("seq") {
+        val s = "1 ; 2"
+        val v = N(2)
+        MyO(s, List(v, v, v, v, v, v, v, v)).exec
+
+        val sp = "let x = 1 + 2 in x * x; x - 1"
+        MyO(sp, List(v, v, v, v, v, v, v, v)).exec
+    }
+
     // REMINDER:
         // LEXICAL Block: NC, then Implicite
     // new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition)),

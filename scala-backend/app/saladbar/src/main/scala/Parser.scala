@@ -35,7 +35,8 @@ case class SyntaxError(s: String) extends Exception {
   *                               | <=  exprCmp
   *                               | <  exprCmp
   *                               | ==  exprCmp
-  *                               | !=  exprCmp }
+  *                               | !=  exprCmp
+  *                               | ; exprCmp }
   *             exprAS ::= exprMD { + exprAS | - exprAS }
   *             exprMD ::= exprVal { * exprMD | / exprMD }
   *            exprVal ::= n
@@ -124,7 +125,7 @@ class Parser extends RegexParsers {
 
     def exprCmp: Parser[Expr] = {
         // NOTE: order matters: need === before == or it won't work correctly here.
-        exprAS ~ opt( ("==="|"!=="|">="|">"|"<="|"<"|"=="|"!=") ~ exprCmp ) ^^ {
+        exprAS ~ opt( ("==="|"!=="|">="|">"|"<="|"<"|"=="|"!="|";") ~ exprCmp ) ^^ {
             case e1 ~ Some(">=" ~ e2) => Binary(Geq, e1, e2)
             case e1 ~ Some(">" ~ e2) => Binary(Gt, e1, e2)
             case e1 ~ Some("<=" ~ e2) => Binary(Leq, e1, e2)
@@ -133,6 +134,7 @@ class Parser extends RegexParsers {
             case e1 ~ Some("===" ~ e2) => Binary(Eqq, e1, e2)
             case e1 ~ Some("!=" ~ e2) => Binary(Neq, e1, e2)
             case e1 ~ Some("!==" ~ e2) => Binary(Neqq, e1, e2)
+            case e1 ~ Some(";" ~ e2) => Binary(Seq, e1, e2)
             case e1 ~ None => e1
         }
     }
