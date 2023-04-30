@@ -7,6 +7,14 @@ import play.api.libs.json.{Json, JsValue}
 
 import saladbar._
 
+/**
+  * HomeController
+  * 
+  * OO PATTERN: Proxy
+  * OO PATTERN: Controller
+  *
+  * @param controllerComponents
+  */
 @Singleton
 class HomeController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 

@@ -1,6 +1,12 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * ParserTest
+  * 
+  * unit tests for the Parser only
+  */
 class ParserTest extends  AnyFunSuite {
     val parser = new Parser
 
@@ -13,6 +19,10 @@ class ParserTest extends  AnyFunSuite {
 
     test("plus"){
         assert(Binary(Plus, N(1), N(2)) == parser.parse("1 + 2"))
+    }
+
+    test("plusString"){
+        assert(Binary(Plus, S("55"), N(2.0)) == parser.parse("'55' + 2"))
     }
 
     test("times"){

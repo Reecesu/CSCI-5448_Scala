@@ -1,8 +1,28 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
 /**
-  * vList order matters
+  * TODO: Refactor tests to a single format like this but with stricter
+  * testing policies to create easier extensibility.
+  */
+
+
+/**
+  * MyO
+  * 
+  * an object used for testing
+  * create an object
+  * execute `.exec` to run the tests
+  * 
+  * LEXICAL:
+  *    no conversions vs implicit (eager/lazy)
+  * DYNAMIC:
+  *    no conversions vs implicit (eager/lazy)
+  *
+  * @param s
+  * @param oe
+  * @param vs
   */
 class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
 
@@ -57,6 +77,12 @@ class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
     }
 }
 
+
+/**
+  * A collection of factories
+  * 
+  * OO PATTERN: Factory
+  */
 object MyO {
     def apply(s: String, v: Value): MyO = MyO(s, None, v)
     def apply(s: String, e: Expr, v: Value): MyO = MyO(s, Some(e), v)
@@ -66,6 +92,12 @@ object MyO {
     def apply(s: String, oe: Option[Expr], vs: List[Value]): MyO = new MyO(s, oe, vs)
 }
 
+
+/**
+  * IntegrationTest
+  * 
+  * execute all possible semantics combinations on a given expression
+  */
 class IntegrationTest extends AnyFunSuite {
     test("number"){
         val v = N(1)
@@ -83,6 +115,8 @@ class IntegrationTest extends AnyFunSuite {
     }
 
     test("string plus"){
+        // TODO: improve toString logic so "55" + 2 is "552.0" and not "'55'2.0"
+        // this test is correct, we are failing atm.
         val v: Value = S("552.0")
         val tmp = new InterpreterError("failed type conversions")
         val err: Value = LettuceError(tmp)
@@ -228,5 +262,31 @@ class IntegrationTest extends AnyFunSuite {
         val err = LettuceError(tmp)
         MyO(s, List(err, err, N(3), N(3), err, err, N(4), N(4))).exec
     }
+
+    test("div by 0.0 with try catch") {
+        // TODO: consider change to no conversion semantic to have same infinity
+        val s = "try { 5.0/0.0 } catch { 1.0 }"
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        // TODO: pretify below
+        val v2 = N(Double.PositiveInfinity)
+        val v1 = v2
+        MyO(s, List(v1, v1, 
+                    v2, v2, 
+                    v1, v1, 
+                    v2, v2)).exec
+    }
+
+    // REMINDER:
+        // LEXICAL Block: NC, then Implicite
+    // new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, NoConversions, LazyCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, ImplicitConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, ImplicitConversions, LazyCondition)), 
+        // Dynamic Block: NC, then Implicite
+    // new Interpreter(new EvalConditions(DynamicScope, NoConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, NoConversions, LazyCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, LazyCondition)), 
 
 }

@@ -1,6 +1,13 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * InterpreterTest
+  * 
+  * For initial testing of new expressions.
+  * preference to use IntegrationTest class for official testing
+  */
 class InterpreterTest extends AnyFunSuite {
 
     def interpreterTest(interpreter: Interpreter, e: Expr, l: List[Expr]): Unit = {
