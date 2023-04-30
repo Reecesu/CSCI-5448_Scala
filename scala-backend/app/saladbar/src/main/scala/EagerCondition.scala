@@ -9,7 +9,7 @@ case object EagerCondition extends LazyEagerCondition {
     /**
       * check
       * 
-      * Under eager conditions, it is only  okay to move forward with evaluation
+      * Under eager conditions, it is only okay to move forward with evaluation
       * iff the expression $e1 is a value
       *
       * @param e1

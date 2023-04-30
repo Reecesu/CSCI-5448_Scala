@@ -25,6 +25,17 @@ case class Unary(uop: Uop, e1: Expr) extends Expr {
     }
 
 
+    /**
+      * substitute
+      * 
+      * find all free instances of $x in $this and replace with $esub
+      *
+      * @param evalConditions
+      * @param x
+      * @param esub
+      * @param sc
+      * @return
+      */
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
         e1.substitute(evalConditions, x, esub){
             e1p => sc(Unary(uop, e1p))

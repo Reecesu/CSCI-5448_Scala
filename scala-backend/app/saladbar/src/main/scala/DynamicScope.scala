@@ -11,6 +11,8 @@ case object DynamicScope extends ScopingCondition {
       * substFunctions
       * 
       * in dynamic scope for small step we must evaluate function bodies with updated closures
+      * that map the argument $esub to the parameter name $x when evaluating the body of the
+      * function $e
       *
       * @param evalConditions
       * @param e

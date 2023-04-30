@@ -1,6 +1,25 @@
 package saladbar
 
 
+/**
+  * LazyCondition
+  * 
+  * pass by expression semantics. only evaluate an expression when you
+  * absolutely have to. currently, this does not memoize
+  * 
+  * e.g. 
+  *   let x = 1 + 2 in x * x 
+  *   steps to
+  *   (1 + 2) * (1 + 2)
+  * 
+  * TODO: additional LazyEagerCondition that automagically memoizes for you e.g.
+  *   let x = 1 + 2 in x * x 
+  *   steps to
+  *   lazy(0) * lazy(0) such that lazy(0) holds unevaluate expression 1 + 2
+  *   steps to
+  *   3 * lazy(0) such that lazy(0) holds evaluated value 3
+  * 
+  */
 case object LazyCondition extends LazyEagerCondition {
 
 
@@ -19,6 +38,7 @@ case object LazyCondition extends LazyEagerCondition {
         sc()
     }
 
+
     /**
       * toString
       *
@@ -31,5 +51,6 @@ case object LazyCondition extends LazyEagerCondition {
         "lazy"
     }
 
+    
 }
 

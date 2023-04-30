@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * NoConversions
+  * 
+  * OO Pattern: Template
   */
 case object NoConversions extends TypeCondition {
 
@@ -43,7 +45,7 @@ case object NoConversions extends TypeCondition {
     /**
       * checkBop1
       * 
-      * v1 must conform to expected type
+      * Confirm expected type of the left-hand valued operand of the this event
       *
       * @param bop
       * @param v1
@@ -52,8 +54,16 @@ case object NoConversions extends TypeCondition {
       */
     def checkBop1[A](bop: Bop, v1: Value)(sc: () => A): A = {
         bop match {
-            // SPWI: is this correct?
-            case Plus | Times | Minus | Geq => v1 match {
+            case And | Or =>  v1 match {
+                case B(_) => sc()
+                case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
+            }
+            case Eq | Neq | Eqq | Neqq => sc()
+            case Gt | Geq | Lt | Leq | Plus => v1 match {
+                case N(_) | S(_) => sc()
+                case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
+            }
+            case Minus | Times | Div => v1 match {
                 case N(_) => sc()
                 case _ => throw new NoConversionsError(s"$v1 not valid subject as first argument to $bop")
             }
@@ -124,13 +134,17 @@ case object NoConversions extends TypeCondition {
                 case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
             }
             case Times => (v1, v2) match {
-            case (N(n1), N(n2)) => sc(N(n1 * n2))
-            // TODO: strings
-            case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+                case (N(n1), N(n2)) => sc(N(n1 * n2))
+                // TODO: strings as a different type symantic
+                case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
             }
             case Minus => (v1, v2) match {
-            case (N(n1), N(n2)) => sc(N(n1 - n2))
-            case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+                case (N(n1), N(n2)) => sc(N(n1 - n2))
+                case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
+            }
+            case Div => (v1, v2) match {
+                case (N(n1), N(n2)) => sc(N(n1 / n2))
+                case _ => throw new NoConversionsError(s"invalid value types on $bop: $v1, $v2")
             }
             case Geq => hCmp { _ >= _ }{ _ >= _ }
             case Gt => hCmp { _ > _ }{ _ > _ }
@@ -140,6 +154,7 @@ case object NoConversions extends TypeCondition {
             case Eqq => hEqality{ _ == _ }
             case Neq => hEqality{ _ != _ }
             case Neqq => hEqality{ _ != _ }
+            case _ => ???
         }
     }
 

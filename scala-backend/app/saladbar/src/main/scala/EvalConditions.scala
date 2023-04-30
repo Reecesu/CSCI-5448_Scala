@@ -8,7 +8,9 @@ package saladbar
   * @param tc: TypeCondition of interest
   * @param lec: LazyEagerCondition of interest
   */
-class EvalConditions(sc: ScopingCondition, tc: TypeCondition, lec: LazyEagerCondition) {
+class EvalConditions(private val sc: ScopingCondition, 
+                     private val tc: TypeCondition, 
+                     private val lec: LazyEagerCondition) {
 
   def getSc: ScopingCondition = this.sc
   def getTc: TypeCondition = this.tc

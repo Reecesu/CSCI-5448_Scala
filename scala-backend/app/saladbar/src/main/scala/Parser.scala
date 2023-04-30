@@ -52,6 +52,7 @@ case class SyntaxError(s: String) extends Exception {
   * 
   * NOTE requirement for () in uop(e)
   * 
+  * TODO: straiten out the parser with more atomic parsing
   * 
   * ADDAPTED FROM: https://github.com/sriram0339/LettucePlaygroundScala
   *   - https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala

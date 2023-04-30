@@ -229,4 +229,31 @@ class IntegrationTest extends AnyFunSuite {
         MyO(s, List(err, err, N(3), N(3), err, err, N(4), N(4))).exec
     }
 
+    test("div by 0.0 with try catch") {
+        // TODO: consider change to no conversion semantic to have same infinity
+        val s = "try { 5.0/0.0 } catch { 1.0 }"
+        val tmp = new InterpreterError("failed type conversions")
+        val err = LettuceError(tmp)
+        // TODO: pretify below
+        val v2 = N(Double.PositiveInfinity)
+        val v1 = v2
+        MyO(s, List(v1, v1, 
+                    v2, v2, 
+                    v1, v1, 
+                    v2, v2)).exec
+    }
+
+    // REMINDER:
+        // LEXICAL Block: NC, then Implicite
+    // new Interpreter(new EvalConditions(LexicalScope, NoConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, NoConversions, LazyCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, ImplicitConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(LexicalScope, ImplicitConversions, LazyCondition)), 
+        // Dynamic Block: NC, then Implicite
+    // new Interpreter(new EvalConditions(DynamicScope, NoConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, NoConversions, LazyCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, EagerCondition)),
+    // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, LazyCondition)), 
+
+
 }

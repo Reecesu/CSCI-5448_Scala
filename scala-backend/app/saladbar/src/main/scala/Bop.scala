@@ -4,26 +4,11 @@ package saladbar
 /**
   * Bop
   * 
-  * a collection of binary operations
+  * A collection of binary operations
+  * Completed in a single file due to size of the structures
   */
 sealed trait Bop {
     override def toString: String
-    def checkBop1[A](v1: Value)(sc: () => A)(fc: () => A): A = this match {
-        case And | Or =>  v1 match {
-            case B(_) => sc()
-            case _ => fc()
-        }
-        case Eq | Neq | Eqq | Neqq => sc()
-        case Gt | Geq | Lt | Leq | Plus => v1 match {
-            case N(_) | S(_) => sc()
-            case _ => fc()
-        }
-        case Minus | Times | Div => v1 match {
-            case N(_) => sc()
-            case _ => fc()
-        }
-        case _ => ???
-    }
 }
 
 

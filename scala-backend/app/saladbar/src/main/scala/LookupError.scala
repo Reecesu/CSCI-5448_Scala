@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * LookupError
+  * 
+  * used in Evnironment class
   *
   * @param x
   */

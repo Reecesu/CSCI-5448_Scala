@@ -9,6 +9,18 @@ package saladbar
   * elements of closures.
   */
 sealed trait Environment {
+
+
+    /**
+      * lookup
+      * 
+      * determine if $x exists in $this.
+      * Note that ExtendRec creates closures dynamically to allow for circular
+      * scopes in the event of recursive functions 
+      *     `letrec id_functionName = Closure(id_parameter, e_funcitonBody, envCl) in e2.`
+      *
+      * @param x
+      */
     def lookup(x: String): Expr = {
         this match {
             case EmptyEnv => throw new LookupError(x)
@@ -20,6 +32,8 @@ sealed trait Environment {
                 else env lookup x
         }
     }
+
+
 }
 
 
@@ -47,7 +61,7 @@ case class Extend(id: String, e: Expr, env: Environment) extends Environment
 /**
   * ExtendRec
   * 
-  * For any letrec id_functionName = closure(id_parameter, e_funcitonBody, envCl) in e2
+  * For any letrec id_functionName = Closure(id_parameter, e_funcitonBody, envCl) in e2
   * we extend $env with $id_functionName mapped to both $id_parameter and $e_funcitonBody
   * in a way such that new closures can be produced dynamically during lookup
   * operations.

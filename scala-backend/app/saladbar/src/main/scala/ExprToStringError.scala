@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * ExprToStringError
+  * 
+  * Used by the Parser class
   *
   * @param msg
   */

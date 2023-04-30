@@ -25,6 +25,20 @@ case class LetRec(id_functionName: String,
     }
 
 
+    /**
+      * substitute
+      * 
+      * find all free instances of $x in $this and replace with $esub
+      * if $id_functionName is equal to $x then $x is already bound in both $e_functionBody,
+      *     as well as $e2
+      * if $id_parameter is equal to $x, then $x is already boudn in $e_functionBody
+      *
+      * @param evalConditions
+      * @param x
+      * @param esub
+      * @param sc
+      * @return
+      */
     override def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = {
         // letrec f = cl(x) e {env} in e2
         val Closure(id_parameter, e_functionBody, envcl) = closure
