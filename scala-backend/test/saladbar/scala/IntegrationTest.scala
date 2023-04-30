@@ -1,8 +1,28 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
 /**
-  * vList order matters
+  * TODO: Refactor tests to a single format like this but with stricter
+  * testing policies to create easier extensibility.
+  */
+
+
+/**
+  * MyO
+  * 
+  * an object used for testing
+  * create an object
+  * execute `.exec` to run the tests
+  * 
+  * LEXICAL:
+  *    no conversions vs implicit (eager/lazy)
+  * DYNAMIC:
+  *    no conversions vs implicit (eager/lazy)
+  *
+  * @param s
+  * @param oe
+  * @param vs
   */
 class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
 
@@ -57,6 +77,12 @@ class MyO(s: String, oe: Option[Expr], vs: List[Value]) {
     }
 }
 
+
+/**
+  * A collection of factories
+  * 
+  * OO PATTERN: Factory
+  */
 object MyO {
     def apply(s: String, v: Value): MyO = MyO(s, None, v)
     def apply(s: String, e: Expr, v: Value): MyO = MyO(s, Some(e), v)
@@ -66,6 +92,12 @@ object MyO {
     def apply(s: String, oe: Option[Expr], vs: List[Value]): MyO = new MyO(s, oe, vs)
 }
 
+
+/**
+  * IntegrationTest
+  * 
+  * execute all possible semantics combinations on a given expression
+  */
 class IntegrationTest extends AnyFunSuite {
     test("number"){
         val v = N(1)
@@ -254,6 +286,5 @@ class IntegrationTest extends AnyFunSuite {
     // new Interpreter(new EvalConditions(DynamicScope, NoConversions, LazyCondition)),
     // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, EagerCondition)),
     // new Interpreter(new EvalConditions(DynamicScope, ImplicitConversions, LazyCondition)), 
-
 
 }

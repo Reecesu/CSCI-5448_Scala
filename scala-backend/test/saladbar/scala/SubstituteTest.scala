@@ -1,6 +1,12 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * SubstituteTest
+  * 
+  * Unit tests for Expr.substitute
+  */
 class SubstituteTest extends AnyFunSuite {
     def substituteTest(ec: EvalConditions, e: Expr, x: String, esub: Expr, expectedResult: Expr): Unit = {
         assert( e.substitute(ec, x, esub){r => r} == expectedResult)

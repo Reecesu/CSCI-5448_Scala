@@ -1,6 +1,12 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * LookupTest
+  * 
+  * unit tests for Environment.lookup method
+  */
 class LookupTest extends AnyFunSuite {
 
     def testDNE(env: Environment, id: String) = {

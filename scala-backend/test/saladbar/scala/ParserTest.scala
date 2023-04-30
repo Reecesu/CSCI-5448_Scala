@@ -1,6 +1,12 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * ParserTest
+  * 
+  * unit tests for the Parser only
+  */
 class ParserTest extends  AnyFunSuite {
     val parser = new Parser
 

@@ -1,6 +1,13 @@
 import org.scalatest.funsuite._
 import saladbar._
 
+
+/**
+  * ExprToStringTest
+  * 
+  * unit testing that some given expression
+  * converts to string in expected format
+  */
 class ExprToStringTest extends AnyFunSuite {
     test("number") {
         val e = N(2)
