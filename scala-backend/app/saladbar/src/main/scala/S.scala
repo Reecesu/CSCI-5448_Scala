@@ -18,6 +18,7 @@ case class S(s: String) extends Value {
         }
     }
     def toBool: Boolean = s != ""
+    // TODO: improve toString logic so "55" + 2 is "552.0" and not "'55'2.0"
     override def toString: String = s"'$s'"
     def substitute[A](evalConditions: EvalConditions, x: String, esub: Expr)(sc: Expr => A): A = sc(this) 
 }

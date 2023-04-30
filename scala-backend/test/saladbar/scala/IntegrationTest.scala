@@ -115,6 +115,8 @@ class IntegrationTest extends AnyFunSuite {
     }
 
     test("string plus"){
+        // TODO: improve toString logic so "55" + 2 is "552.0" and not "'55'2.0"
+        // this test is correct, we are failing atm.
         val v: Value = S("552.0")
         val tmp = new InterpreterError("failed type conversions")
         val err: Value = LettuceError(tmp)

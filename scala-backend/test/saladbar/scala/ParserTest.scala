@@ -21,6 +21,10 @@ class ParserTest extends  AnyFunSuite {
         assert(Binary(Plus, N(1), N(2)) == parser.parse("1 + 2"))
     }
 
+    test("plusString"){
+        assert(Binary(Plus, S("55"), N(2.0)) == parser.parse("'55' + 2"))
+    }
+
     test("times"){
         assert(Binary(Times, N(1), N(2)) == parser.parse("1 * 2"))
     }
