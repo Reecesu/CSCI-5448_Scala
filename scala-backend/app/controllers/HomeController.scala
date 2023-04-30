@@ -11,6 +11,7 @@ import saladbar._
   * HomeController
   * 
   * OO PATTERN: Proxy
+  * OO PATTERN: Controller
   *
   * @param controllerComponents
   */
