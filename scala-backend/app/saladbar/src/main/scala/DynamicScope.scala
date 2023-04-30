@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * DynamicScope
+  * 
+  * OO PATTERN: Template
   */
 case object DynamicScope extends ScopingCondition {
 

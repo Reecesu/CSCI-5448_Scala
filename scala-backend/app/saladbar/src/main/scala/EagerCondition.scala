@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * EagerCondition
+  * 
+  * OO PATTERN: Template
   */
 case object EagerCondition extends LazyEagerCondition {
 

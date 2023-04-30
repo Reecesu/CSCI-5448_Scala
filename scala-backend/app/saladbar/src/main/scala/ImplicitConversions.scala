@@ -4,6 +4,8 @@ package saladbar
 /**
   * ImplicitConversions
   * 
+  * OO PATTERN: Template
+  * 
   * Think javascript type changes, so 
   * true + 5 == 6
   * true && 5 == true

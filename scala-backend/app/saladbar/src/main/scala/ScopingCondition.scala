@@ -11,6 +11,8 @@ abstract class ScopingCondition {
     * 
     * Scoping condition as Lexical or Dynamic will impact how
     * functions evaluate.
+    * 
+    * OO PATTERN: Template
     *
     * @param evalConditions
     * @param e

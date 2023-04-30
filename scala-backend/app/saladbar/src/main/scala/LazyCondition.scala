@@ -19,6 +19,8 @@ package saladbar
   *   steps to
   *   3 * lazy(0) such that lazy(0) holds evaluated value 3
   * 
+  * OO PATTERN: Template
+  * 
   */
 case object LazyCondition extends LazyEagerCondition {
 

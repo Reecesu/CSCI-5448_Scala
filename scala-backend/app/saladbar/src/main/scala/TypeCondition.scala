@@ -3,6 +3,8 @@ package saladbar
 
 /**
   * TypeCondition
+  * 
+  * OO PATTERN: Template
   */
 abstract class TypeCondition {
 

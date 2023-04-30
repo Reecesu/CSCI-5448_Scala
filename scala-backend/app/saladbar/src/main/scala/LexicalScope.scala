@@ -4,7 +4,7 @@ package saladbar
 /**
   * LexicalScope
   * 
-  * OO PATTERN: template
+  * OO PATTERN: Template
   */
 case object LexicalScope extends ScopingCondition {
 
