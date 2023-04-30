@@ -69,7 +69,7 @@ object UserInput {
 
       val parser = new saladbar.Parser
       val se = (json \ "expression").as[String]
-      println(s"processing expression: $se")
+      println(s"processing expression: $se\nwith evaluationconditions: $evalConditions")
       val e = parser.parse(se)
 
       new UserInput(evalConditions, e)

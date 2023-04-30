@@ -151,7 +151,7 @@ case object ImplicitConversions extends TypeCondition {
       * @return
       */
     override def toString: String = {
-        "implicite"
+        "implicit"
     }
 
     
