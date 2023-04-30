@@ -14,6 +14,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const drawerWidth = 240;
 
+/**
+ * Currently not in use, but it does work for a more beautiful webpage with top-left hamburger
+ * TODO: reintegrate refactor as needed for better UX
+ */
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
