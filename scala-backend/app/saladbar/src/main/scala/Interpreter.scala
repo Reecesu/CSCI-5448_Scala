@@ -9,6 +9,7 @@ package saladbar
   * 
   * OO Pattern: Interpreter
   * OO PATTERN: Model (in MVC-VM, not the ViewModel, just the model)
+  * OO PATTERN: Proxy
   * 
   * @param evalConditions
   */
