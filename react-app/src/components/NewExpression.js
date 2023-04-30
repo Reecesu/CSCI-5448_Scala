@@ -1,6 +1,13 @@
 import React from 'react';
 import Paper from '@mui/material/Paper';
 
+
+/**
+ * The bottom right hand user expression panel
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
 const NewExpression = ({ expression }) => {
   return (
     <Paper
