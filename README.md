@@ -2,6 +2,10 @@
 OOAD Semester Project
 
 
+# Videos
+* Project 7 project summary video on youtube at: https://youtu.be/o2flzs19sQU
+
+
 # to launch:
 ## prerequisites
 * need `sbt` installed
