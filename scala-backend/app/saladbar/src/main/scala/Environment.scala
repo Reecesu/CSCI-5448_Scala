@@ -10,6 +10,8 @@ package saladbar
   * 
   * OO PATTERN: Composite
   * 
+  * Special credit to Sriram Sankaranarayanan for initial development of this concept
+  * and notation for CSCI 3155: https://github.com/sriram0339/csci3155_notebooks
   */
 sealed trait Environment {
 
