@@ -25,7 +25,7 @@ OOAD Semester Project
     * npm install;
         * must run this the very first time.
         * must run this if making changes to package.json
-    * npm start;
+    * npm run start;
 
 ## Instructions tl;dr
 * two terminals
@@ -34,7 +34,7 @@ OOAD Semester Project
     * sbt run;
 * terminal 2:
     * cd react-app;
-    * npm start;
+    * npm run start;
 
 
 # TODO
