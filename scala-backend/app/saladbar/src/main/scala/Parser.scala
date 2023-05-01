@@ -55,8 +55,7 @@ case class SyntaxError(s: String) extends Exception {
   * 
   * TODO: straiten out the parser with more atomic parsing
   * 
-  * ADDAPTED FROM: https://github.com/sriram0339/LettucePlaygroundScala
-  *   - https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala
+  * ADDAPTED FROM: https://github.com/sriram0339/LettucePlaygroundScala/blob/master/src/main/scala/edu/colorado/csci3155/LettuceAST/LettuceParser.scala
   * and: https://github.com/csci3155/pppl-labdev/blob/main/src/main/scala/jsy/lab5/Parser.scala
   * 
   */

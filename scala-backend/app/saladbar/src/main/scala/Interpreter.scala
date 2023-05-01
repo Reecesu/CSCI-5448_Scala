@@ -14,6 +14,7 @@ package saladbar
   */
 class Interpreter(private var evalConditions: EvalConditions) {
 
+  
   /**
     * setEvalConditions
     * 
@@ -51,13 +52,16 @@ class Interpreter(private var evalConditions: EvalConditions) {
     *           1+6,
     *           7)
     *
+    * Special credit to Bor-Yuh Evan Chang for initial development of this method
+    * and notation for CSCI 3155: https://csci3155.cs.colorado.edu/csci3155-notes.pdf
+    * 
     * @param e
     * @param maxSteps
     * @param sc
     * @return
     */
   private def evaluate[A](e: Expr, maxSteps: Int)(sc: List[Expr] => A): A = {
-    println(e)
+    // println(e)
     if (maxSteps <= 0 || e.isValue) sc(List(e))
     else {
       e.stepWrapper(evalConditions){

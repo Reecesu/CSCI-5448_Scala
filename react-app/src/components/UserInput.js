@@ -6,6 +6,8 @@ import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Grid } fr
 /**
  * a representaiton of the scala expression and its values
  * handles step forward and step back logic
+ * 
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
  */
 class ScalaExpr {
 
@@ -129,6 +131,7 @@ const scalaExpr = new ScalaExpr(0, []);
  * @returns 
  */
 function ExpressionInput(props) {
+  // https://legacy.reactjs.org/docs/hooks-state.html
   const [userExpression, setUserExpression] = useState(undefined);
   const [scopingCondition, setScopingCondition] = useState("");
   const [typeCondition, setTypeCondition] = useState("");
@@ -232,7 +235,7 @@ function ExpressionInput(props) {
   return (
     <div>
       <form onSubmit={handleSubmit} style={formStyle}>
-
+        {/* https://mui.com/material-ui/api/grid/ */}
         <Grid container rowSpacing={1}>
           <Grid item xs={7}> 
             <TextField
@@ -298,6 +301,7 @@ function ExpressionInput(props) {
         </Grid> {/* End top row */}
 
         <div>
+          {/* https://mui.com/material-ui/react-button/ */}
           <Button type="submit" variant="contained" style={buttonStyle}>
             Send
           </Button>

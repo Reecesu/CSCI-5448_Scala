@@ -7,6 +7,10 @@ package saladbar
   * from concrete syntax: try { e1 } catch { e2 }
   * 
   * OO PATTERN: Composite
+  * 
+  * Please note that while this is seen in the course notes for 3155, this is
+  * original development from Spencer Wilson that inspired that course note 
+  * in big step semantics
   *
   * @param e1
   * @param e2
