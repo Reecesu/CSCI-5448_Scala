@@ -17,6 +17,10 @@ OOAD Semester Project
     * this is due to a restriction from the play framework: https://discuss.lightbend.com/t/play-sample-on-windows-java-lang-illegalstateexception-unable-to-load-cache-item/8663
     * error indicated by using the tool and seeing the following error on the backend: play.api.UnexpectedException... UncheckedExecutionException... IllegalStateException: Unable to load cache item
 * need `npm` installed
+    * npm --version
+    * 9.6.3
+    * node --version
+    * v19.9.0
 
 ## Instructions
 * two terminals
