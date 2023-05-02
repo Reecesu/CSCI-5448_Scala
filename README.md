@@ -14,6 +14,7 @@ OOAD Semester Project
 ## prerequisites
 * need `sbt` installed
 * currently supports `java 11` (see `java -version`)
+    * this is due to a restriction from the play framework: https://discuss.lightbend.com/t/play-sample-on-windows-java-lang-illegalstateexception-unable-to-load-cache-item/8663
 * need `npm` installed
 
 ## Instructions
