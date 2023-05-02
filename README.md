@@ -6,9 +6,14 @@ OOAD Semester Project
 * Project 7 project summary video on youtube at: https://youtu.be/o2flzs19sQU
 
 
+# Disclaimer
+* for any current CSCI 3155 students at CU Boulder, this is not how your Lettuce Interpreter operates in big step.
+
+
 # to launch:
 ## prerequisites
 * need `sbt` installed
+* currently supports `java 11` (see `java -version`)
 * need `npm` installed
 
 ## Instructions
@@ -21,11 +26,6 @@ OOAD Semester Project
         * NOTE: in addition to ctrl + c killing this, just pressing enter will kill this
 * terminal 2:
     * cd react-app;
-    * NEEDS TESTING:
-        * try to work without this command
-        * npm install @material-ui/core;
-        * if not needed then remove this part from the readme
-        * if needed then update readme to note that this is needed the very first time you run the code
     * npm install;
         * must run this the very first time.
         * must run this if making changes to package.json
