@@ -8,7 +8,23 @@ import { Button, TextField, FormControl, InputLabel, Select, MenuItem, Grid } fr
  * handles step forward and step back logic
  * 
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
+ * 
+ * 
+ * Handles logic to display things like: 
+    *
+    * 1 + 2 * 3
+      * 1 + 2 * 3 —> 1 + 6
+        * 1 + 6
+         * 1 + 6 —> 7
+ *  
+ * Returns 7
+ * 
+ * 
+ * 
+ * 
  */
+
+
 class ScalaExpr {
 
     constructor(index, expressions) {
@@ -26,17 +42,9 @@ class ScalaExpr {
 
     /**
      * inc
-     * 
-     * Handle logic to display things like: 
-     *
-     * 1 + 2 * 3
-     * 1 + 2 * 3 —> 1 + 6
-     * 1 + 6
-     * 1 + 6 —> 7
-     * 7
-     * 
      * @param props 
      */
+
     inc(props) {
         this.updateRight = !this.updateRight;
         if (this.updateRight) {
@@ -180,13 +188,14 @@ function ExpressionInput(props) {
       })
     });
 
-    /**
-     * {
-     *  "expression": "<>",
-     *  "value": "<>",
-     *  "steps": ["<>"]
-     * }
-     */
+  /**
+   * {
+   *  "expression": "<>",
+   *  "value": "<>",
+   *  "steps": ["<>"]
+   * }
+   */
+
     const data = await response.json();
     console.log('Server response:', data);
     scalaExpr.expressions = data.steps;
@@ -220,9 +229,7 @@ function ExpressionInput(props) {
       return;
   };
  
-  
-
-  /**
+    /**
    * page layout
    * 
    *    box              dropdown
@@ -232,6 +239,7 @@ function ExpressionInput(props) {
    *   
    *       box          box
    */
+
   return (
     <div>
       <form onSubmit={handleSubmit} style={formStyle}>
@@ -299,7 +307,6 @@ function ExpressionInput(props) {
               </Grid> {/* End top row's right column */}
           </Grid>
         </Grid> {/* End top row */}
-
         <div>
           {/* https://mui.com/material-ui/react-button/ */}
           <Button type="submit" variant="contained" style={buttonStyle}>

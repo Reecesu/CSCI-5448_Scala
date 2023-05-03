@@ -3,7 +3,7 @@ import UserInput from './components/UserInput';
 import Expression from './components/Expression';
 import NewExpression from './components/NewExpression';
 import Box from '@mui/material/Box';
-// import Drawer from './components/Drawer';
+import Drawer from './components/Drawer';
 import { Divider } from '@mui/material';
 
 
@@ -23,7 +23,7 @@ function App() {
       <h1>Welcome to the Lettuce Wrap!</h1>
       
       <UserInput onExpressionChange={setExpression} onNewExpressionChange={setNewExpression}/>
-      {/* <Drawer /> */}
+      <Drawer />
       <Divider variant="middle" />
       <br />
       <Box sx={{ display: 'flex', height: '100vh' }}>

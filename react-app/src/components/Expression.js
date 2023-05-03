@@ -4,9 +4,12 @@ import Paper from '@mui/material/Paper';
 /**
  * The bottom left hand user expression panel
  * 
+ * references: https://mui.com/material-ui/react-paper/
+ * 
  * @param {*} param0 
  * @returns 
  */
+
 const Expression = ({ expression }) => {
   return (
     <Paper
@@ -21,7 +24,6 @@ const Expression = ({ expression }) => {
       variant="outlined"
     >
       <p>{JSON.stringify(expression, null, 2)}</p>
-      {/* TODO: EVSU Remove string quotations  */}
     </Paper>
   );
 }

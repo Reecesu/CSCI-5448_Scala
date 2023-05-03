@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import ExpressionForm from './ExpressionInput';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -8,16 +7,26 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import BookIcon from '@mui/icons-material/Book';
 
-const drawerWidth = 240;
+const drawerWidth = 720;
+const grammar_image = '/LettuceWrapGrammar.png';
 
 /**
  * Currently not in use, but it does work for a more beautiful webpage with top-left hamburger
+ * 
+ * Visit MUI template at https://mui.com/material-ui/react-drawer/#persistent-drawer
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * TODO: reintegrate refactor as needed for better UX
  */
+
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -87,9 +96,10 @@ export default function PersistentDrawerLeft() {
             edge="start"
             sx={{ mr: 2, ...(open && { display: 'none' }) }}
           >
-            <MenuIcon />
+            <BookIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
+            {/* modification: update text */}
             Welcome to the Lettuce Wrap Project, an Interactive Language Interpreter!
           </Typography>
         </Toolbar>
@@ -112,7 +122,18 @@ export default function PersistentDrawerLeft() {
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
-        <ExpressionForm />
+        {/* modification: remove text */}
+        <Box sx={{ padding: 2, height: '100%' }}>
+        <img
+          src={grammar_image}
+          alt="Grammar"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+          }}
+        />
+      </Box>
       </Drawer>
       <Main open={open}>
       </Main>
