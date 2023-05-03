@@ -45,7 +45,3 @@ OOAD Semester Project
 * terminal 2:
     * cd react-app;
     * npm run start;
-
-
-# TODO
-* consider an update the UI with a page to explain the langauge grammar/a general how to page
