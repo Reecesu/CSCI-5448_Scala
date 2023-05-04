@@ -1,5 +1,6 @@
 # LettuceWrap
 OOAD Semester Project
+Reece Suchocki & Spencer Wilson
 
 
 # Videos
